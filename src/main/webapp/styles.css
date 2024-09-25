@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Светлый фон */
+    color: #333; /* Темный текст для контраста */
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #bdda39; /* Пастельный желтый */
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Использует flexbox для размещения элементов в одну строку */
+    align-items: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333; /* Темный текст для ссылок */
+}
+
+nav ul li a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+.site-icon {
+    height: 70px; /* Пример высоты для иконки сайта */
+    margin-right: 10px; /* Отступ между иконкой и заголовком */
+}
+
+.user-info {
+    background-color: #ffe082; /* Светло-желтый */
+    padding: 10px;
+    margin: 10px 0;
+}
+
+form {
+    margin: 20px 0;
+}
+
+form input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #ffcc80; /* Еще один оттенок пастельного желтого */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #ffb74d; /* Более насыщенный желтый при наведении */
+}
+
+.messages {
+    margin: 20px 0;
+}
+
+.message {
+    background-color: #fff9c4; /* Очень светлый желтый фон для сообщений */
+    border-left: 5px solid #bdda39; /* Желтая линия слева */
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.content {
+    padding: 20px;
+    background-color: #fff; /* Белый фон для контента */
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #bdda39; /* Пастельный желтый */
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer p {
+    margin: 5px 0;
+}
+.header-with-logo {
+    background-color: #bdda39;
+}
