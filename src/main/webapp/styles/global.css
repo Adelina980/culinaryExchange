@@ -1,0 +1,8 @@
+::selection{
+    background-color:yellow;
+    color: black;
+}
+p::first-line{
+    font-weight:bold;
+    text-transform: uppercase;
+}

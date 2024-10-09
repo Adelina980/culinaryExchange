@@ -7,7 +7,7 @@ body {
 }
 
 nav {
-    background-color: #bdda39; /* Пастельный желтый */
+    background-color: #bdda39; /* Пастельный желтый #bdda39 #ffeb3b*/
     padding: 10px 20px;
 }
 
@@ -17,11 +17,13 @@ nav ul {
     margin: 0;
     display: flex; /* Использует flexbox для размещения элементов в одну строку */
     align-items: center;
+
 }
 
 nav ul li {
     display: inline;
     margin-right: 15px;
+
 }
 
 nav ul li a {
@@ -33,8 +35,10 @@ nav ul li a:hover {
     text-decoration: underline; /* Подчеркивание при наведении */
 }
 .site-icon {
-    height: 70px; /* Пример высоты для иконки сайта */
-    margin-right: 10px; /* Отступ между иконкой и заголовком */
+    height: 70px;
+    margin-right: 10px;
+    border-radius: 100%;
+    object-fit: cover;
 }
 
 .user-info {
@@ -91,7 +95,4 @@ footer {
 
 footer p {
     margin: 5px 0;
-}
-.header-with-logo {
-    background-color: #bdda39;
 }

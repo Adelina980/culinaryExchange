@@ -1,17 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="/WEB-INF/views/header.jsp" %>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>register</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="./styles/reset.css">
+    <link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
 <header>
     <nav>
-        <a href="index.jsp">Главная</a>
+        <a href="/main">Главная</a>
     </nav>
 </header>
 
@@ -31,19 +33,26 @@
             <input type="password" id="reg-password" name="password" required>
         </div>
         <div>
+            <label for="reg-password-confirm">Подтвердите пароль:</label>
+            <input type="password" id="reg-password-confirm" name="passwordConfirm" required>
+        </div>
+        <div>
             <label for="preferences">Предпочтения в кухне:</label>
-            <select id="preferences" name="preferences">
-                <option value="">Выберите предпочтение</option>
-                <option value="Итальянская">Итальянская</option>
-                <option value="Французская">Французская</option>
-                <option value="Испанская">Испанская</option>
-                <option value="Мексиканская">Мексиканская</option>
-                <option value="Японская">Японская</option>
-                <option value="Индийская">Индийская</option>
-                <option value="Китайская">Китайская</option>
-                <option value="Русская">Русская</option>
-                <option value="Средиземноморская">Средиземноморская</option>
-            </select>
+            <div>
+                <select id="preferences" name="preferences" multiple>
+                    <option value="">Выберите предпочтение</option>
+                    <option value="Итальянская">Итальянская</option>
+                    <option value="Французская">Французская</option>
+                    <option value="Испанская">Испанская</option>
+                    <option value="Мексиканская">Мексиканская</option>
+                    <option value="Японская">Японская</option>
+                    <option value="Индийская">Индийская</option>
+                    <option value="Китайская">Китайская</option>
+                    <option value="Русская">Русская</option>
+                    <option value="Средиземноморская">Средиземноморская</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
         </div>
         <div>
             <button type="submit">Зарегистрироваться</button>
@@ -56,3 +65,4 @@
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 </body>
 </html>
+
