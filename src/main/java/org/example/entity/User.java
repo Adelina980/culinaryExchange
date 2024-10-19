@@ -23,8 +23,8 @@ public class User {
     @Column
     private String avatar;
 
-    @Column
-    private String preferences;
+//    @Column
+//    private String preferenceName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recipe> recipes;
@@ -39,6 +39,12 @@ public class User {
     private List<Feedback> feedbacks;
 
 
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getUsername() {
         return username;
     }
@@ -57,17 +63,17 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getAvatar() {
-        return avatar;
-    }
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-    public String getPreferences() {
-        return preferences;
-    }
-    public void setPreferences(String preferences) {
-        this.preferences = preferences;
-    }
+//    public String getAvatar() {
+//        return avatar;
+//    }
+//    public void setAvatar(String avatar) {
+//        this.avatar = avatar;
+//    }
+//    public String getPreferenceName() {
+//        return preferenceName;
+//    }
+//    public void setPreferenceName(String preferenceName) {
+//        this.preferenceName = preferenceName;
+//    }
 }
 

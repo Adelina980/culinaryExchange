@@ -4,7 +4,7 @@ import org.example.entity.Comment;
 
 import java.util.List;
 
-public interface CommentDAO {
+public interface CommentDao {
 
     Comment save(Comment comment);
 

@@ -4,7 +4,7 @@ import org.example.entity.Feedback;
 
 import java.util.List;
 
-public interface FeedbackDAO {
+public interface FeedbackDao {
 
     Feedback save(Feedback feedback);
 

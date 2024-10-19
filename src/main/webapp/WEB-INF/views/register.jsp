@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -23,35 +24,40 @@
         <div>
             <label for="name">Имя:</label>
             <input type="text" id="name" name="name" required>
+            <c:if test="${not empty errors['name']}">
+                <span class="error">${errors['name']}</span>
+            </c:if>
         </div>
         <div>
             <label for="reg-email">Email:</label>
             <input type="email" id="reg-email" name="email" required>
+            <c:if test="${not empty errors['email']}">
+                <span class="error">${errors['email']}</span>
+            </c:if>
         </div>
         <div>
             <label for="reg-password">Пароль:</label>
             <input type="password" id="reg-password" name="password" required>
+            <c:if test="${not empty errors['password']}">
+                <span class="error">${errors['password']}</span>
+            </c:if>
         </div>
         <div>
             <label for="reg-password-confirm">Подтвердите пароль:</label>
             <input type="password" id="reg-password-confirm" name="passwordConfirm" required>
+            <c:if test="${not empty errors['passwordConfirm']}">
+                <span class="error">${errors['passwordConfirm']}</span>
+            </c:if>
         </div>
         <div>
-            <label for="preferences">Предпочтения в кухне:</label>
+            <label>Выберите предпочтения в кухне:</label>
             <div>
-                <select id="preferences" name="preferences" multiple>
-                    <option value="">Выберите предпочтение</option>
-                    <option value="Итальянская">Итальянская</option>
-                    <option value="Французская">Французская</option>
-                    <option value="Испанская">Испанская</option>
-                    <option value="Мексиканская">Мексиканская</option>
-                    <option value="Японская">Японская</option>
-                    <option value="Индийская">Индийская</option>
-                    <option value="Китайская">Китайская</option>
-                    <option value="Русская">Русская</option>
-                    <option value="Средиземноморская">Средиземноморская</option>
-                    <option value="Другое">Другое</option>
-                </select>
+                <c:forEach var="preference" items="${preferences}">
+                    <div>
+                        <input type="checkbox" id="preference-${preference}" name="preferences" value="${preference}">
+                        <label for="preference-${preference}">${preference}</label>
+                    </div>
+                </c:forEach>
             </div>
         </div>
         <div>

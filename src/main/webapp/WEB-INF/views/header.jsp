@@ -23,7 +23,7 @@
         <div class="user-info">
             <c:choose>
                 <c:when test="${not empty user}">
-                    <p>Добро пожаловать, ${user.name}!</p>
+                    <p>Добро пожаловать, ${user.username}!</p>
                     <a href="/logout">Выйти</a>
                 </c:when>
                 <c:otherwise>

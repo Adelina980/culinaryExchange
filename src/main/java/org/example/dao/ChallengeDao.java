@@ -4,7 +4,7 @@ import org.example.entity.Challenge;
 
 import java.util.List;
 
-public interface ChallengeDAO {
+public interface ChallengeDao {
 
     Challenge save(Challenge challenge);
 

@@ -2,7 +2,7 @@ package org.example.dao;
 
 import org.example.entity.Rating;
 
-public interface RatingDAO {
+public interface RatingDao {
 
     Rating save(Rating rating);
 
