@@ -23,6 +23,9 @@ public class User {
     @Column
     private String avatar;
 
+    @Column
+    private String confirmationToken;
+
 //    @Column
 //    private String preferenceName;
 
@@ -62,6 +65,12 @@ public class User {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+    public void setConfirmationToken(String confirmationToken){
+        this.confirmationToken = confirmationToken;
     }
 //    public String getAvatar() {
 //        return avatar;

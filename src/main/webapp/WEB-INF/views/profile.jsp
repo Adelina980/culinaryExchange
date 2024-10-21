@@ -20,9 +20,9 @@
         <img src="${user.avatar}" alt="Аватар пользователя" class="avatar">
         <h2>${user.name}</h2>
         <p>Email: ${user.email}</p>
-        <p>Любимые кухни: ${user.favoriteCuisines}</p>
-        <p>Уровень кулинарного мастерства: ${user.skillLevel}</p>
-        <p>Достижения: ${user.achievements}</p>
+        <p>Любимые кухни: ${userPreference.getPreference().getPreferenceName()}</p>
+<%--        <p>Уровень кулинарного мастерства: ${user.skillLevel}</p>--%>
+<%--        <p>Достижения: ${user.achievements}</p>--%>
         <a href="editProfile.jsp" class="btn">Редактировать профиль</a>
     </div>
 

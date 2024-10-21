@@ -23,19 +23,26 @@
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
+            <c:if test="${not empty errors['email']}">
+                <span class="error">${errors['email']}</span>
+            </c:if>
         </div>
         <div>
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
+            <c:if test="${not empty errors['password']}">
+                <span class="error">${errors['password']}</span>
+            </c:if>
         </div>
         <div>
             <button type="submit">Войти</button>
         </div>
     </form>
 
-<%--    <p><a href="forgot-password.jsp">Забыли пароль?</a></p>--%>
 
     <a class="nav-link text-center mt-3" href="/register">Регистрация</a>
+<%--    <a href="/forgotPassword">Забыли пароль?</a>--%>
+
 
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 </body>

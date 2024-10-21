@@ -97,6 +97,29 @@ public class UserDao {
         return null;
     }
 
+    public User getUserByConfirmationToken(String confirmationToken) throws DbException {
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"User\" WHERE \"confirmationToken\" = ?")) {
+            statement.setString(1, confirmationToken);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                user.setConfirmationToken(resultSet.getString("confirmationToken"));
+
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DbException(e.getMessage());
+        }
+        return null;
+    }
+
+
     public boolean isUsernameExists(String username) throws DbException {
         String sql = "SELECT COUNT(*) FROM \"User\" WHERE username = ?";
         try (Connection connection = connectionProvider.getInstance().getConnection();
@@ -150,6 +173,22 @@ public class UserDao {
             throw new DbException("Ошибка при выполнении запроса findByEmail", e);
         }
         return user;
+    }
+    public void updateUser(User user) throws DbException {
+
+        try (Connection connection = connectionProvider.getInstance().getConnection()) {
+            String sql = "UPDATE \"User\" SET \"confirmationToken\" = ? WHERE \"email\" = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setString(1, user.getConfirmationToken());
+            statement.setString(2, user.getEmail());
+
+            statement.executeUpdate();
+
+            statement.close();
+        } catch (SQLException e) {
+            throw new DbException("Ошибка обновления пользователя", e);
+        }
     }
 
 

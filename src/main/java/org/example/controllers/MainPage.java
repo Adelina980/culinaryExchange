@@ -12,6 +12,6 @@ public class MainPage extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/views/mainPage.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
     }
 }

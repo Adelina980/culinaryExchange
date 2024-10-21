@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import org.example.dao.UserDao;
 import org.example.entity.User;
+import org.example.service.UserService;
 import org.example.util.DbException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -59,7 +60,9 @@ public class login extends HttpServlet {
             }
 
             request.getSession().setAttribute("user", user);
-            response.sendRedirect("/profile");
+
+//            response.sendRedirect("/profile");
+            response.sendRedirect("/main");
         } catch (DbException e) {
             e.printStackTrace();
             getServletContext().getRequestDispatcher("/WEB-INF/views/loginFailed.jsp").forward(request, response);
