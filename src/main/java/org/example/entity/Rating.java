@@ -10,7 +10,7 @@ public class Rating {
     private Long id;
 
     @Column(nullable = false)
-    private Integer rating;
+    private Double rating;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id")
@@ -21,12 +21,34 @@ public class Rating {
     private User user;
 
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
 

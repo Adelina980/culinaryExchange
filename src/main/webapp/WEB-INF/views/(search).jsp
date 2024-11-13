@@ -45,7 +45,7 @@
         <ul class="recipe-list">
             <c:forEach var="recipe" items="${recipes}">
                 <li class="recipe-item">
-                    <a href="recipe.jsp?id=${recipe.id}">
+                    <a href="showRecipe.jsp?id=${recipe.id}">
                         <img src="${recipe.imageUrl}" alt="${recipe.title}" class="recipe-image">
                         <h3>${recipe.title}</h3>
                         <p>${recipe.shortDescription}</p>

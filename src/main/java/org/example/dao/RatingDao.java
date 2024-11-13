@@ -1,13 +1,203 @@
 package org.example.dao;
 
 import org.example.entity.Rating;
+import org.example.util.ConnectionProvider;
+import org.example.util.DbException;
 
-public interface RatingDao {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-    Rating save(Rating rating);
+public class RatingDao {
+    private ConnectionProvider connectionProvider;
 
-    void delete(Rating rating);
+    public RatingDao() {
+        try {
+            this.connectionProvider = ConnectionProvider.getInstance();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 
-    Double findAverageRatingForRecipe(Long recipeId);
+    public Rating save(Rating rating) {
+        String sql = "INSERT INTO \"Rating\" (rating, recipe_id, user_id) VALUES (?, ?,?) RETURNING id";
+
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setDouble(3, rating.getRating());
+            preparedStatement.setLong(1, rating.getRecipe().getId());
+            preparedStatement.setLong(2, rating.getUser().getId());
+
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                rating.setId(resultSet.getLong("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+
+        return rating;
+    }
+
+    public void delete(Long ratingId) {
+        String sql = "DELETE FROM \"Rating\" WHERE id = ?";
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, ratingId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Rating findById(Long id) {
+        Rating rating = null;
+        String sql = "SELECT * FROM \"Rating\" WHERE id = ?";
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+
+            if (resultSet.next()) {
+                rating = new Rating();
+                RecipeDao recipeDao = new RecipeDao();
+                UserDao userDao = new UserDao();
+                rating.setId(resultSet.getLong("id"));
+                rating.setRecipe(recipeDao.findById(resultSet.getLong("recipe_id")));
+                rating.setUser(userDao.findById(resultSet.getLong("user_id")));
+                rating.setRating(resultSet.getDouble("rating"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+        return rating;
+    }
+
+    public List<Rating> findByRecipeId(Long recipeId) {
+        List<Rating> ratings = new ArrayList<>();
+        String sql = "SELECT * FROM \"Rating\" WHERE recipe_id = ?";
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setLong(1, recipeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                RecipeDao recipeDao = new RecipeDao();
+                UserDao userDao = new UserDao();
+                Rating rating = new Rating();
+                rating.setId(resultSet.getLong("id"));
+                rating.setRecipe(recipeDao.findById(resultSet.getLong("recipe_id")));
+                rating.setUser(userDao.findById(resultSet.getLong("user_id")));
+                rating.setRating(resultSet.getDouble("rating"));
+                ratings.add(rating);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+        return ratings;
+    }
+
+    public double calculateAverageRating(Long recipeId) {
+        String sql = "SELECT AVG(rating) FROM \"Rating\" WHERE recipe_id = ?";
+        double average = 0;
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, recipeId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                average = resultSet.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+        return average;
+    }
+
+    public double calculateUserAverageRating(Long userId) {
+        String sql = "SELECT AVG(r.rating) FROM \"Rating\" r "
+                + "JOIN \"Recipe\" rec ON r.recipe_id = rec.id "
+                + "WHERE rec.user_id = ?";
+        double average = 0;
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                average = resultSet.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+
+        return average;
+    }
+
+
+    public void saveOrUpdateRating(Rating rating) {
+        String selectSql = "SELECT id FROM \"Rating\" WHERE user_id = ? AND recipe_id = ?";
+        String updateSql = "UPDATE \"Rating\" SET rating = ? WHERE user_id = ? AND recipe_id = ?";
+        String insertSql = "INSERT INTO \"Rating\" (user_id, recipe_id, rating) VALUES (?, ?, ?)";
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
+            selectStatement.setLong(1, rating.getUser().getId());
+            selectStatement.setLong(2, rating.getRecipe().getId());
+
+            ResultSet resultSet = selectStatement.executeQuery();
+            if (resultSet.next()) {
+                // Если оценка уже существует, обновляем её
+                try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+                    updateStatement.setDouble(1, rating.getRating());
+                    updateStatement.setLong(2, rating.getUser().getId());
+                    updateStatement.setLong(3, rating.getRecipe().getId());
+                    updateStatement.executeUpdate();
+                }
+            } else {
+                // Если оценки нет, добавляем новую
+                try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
+                    insertStatement.setLong(1, rating.getUser().getId());
+                    insertStatement.setLong(2, rating.getRecipe().getId());
+                    insertStatement.setDouble(3, rating.getRating());
+                    insertStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
+
 
