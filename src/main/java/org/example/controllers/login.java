@@ -61,8 +61,15 @@ public class login extends HttpServlet {
 
             request.getSession().setAttribute("user", user);
 
-//            response.sendRedirect("/profile");
-            response.sendRedirect("/main");
+            String returnUrl = request.getParameter("returnUrl");
+            if (returnUrl != null && !returnUrl.isEmpty()) {
+                response.sendRedirect(returnUrl);
+            } else {
+//                response.sendRedirect(getServletContext().getContextPath()+"/profile");
+                response.sendRedirect(getServletContext().getContextPath()+"/main");
+            }
+
+
         } catch (DbException e) {
             e.printStackTrace();
             getServletContext().getRequestDispatcher("/WEB-INF/views/loginFailed.jsp").forward(request, response);

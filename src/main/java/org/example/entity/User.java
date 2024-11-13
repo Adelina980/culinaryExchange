@@ -2,6 +2,8 @@ package org.example.entity;
 
 
 import javax.persistence.*;
+import java.sql.Blob;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,7 +23,7 @@ public class User {
     private String password;
 
     @Column
-    private String avatar;
+    private Blob avatar;
 
     @Column
     private String confirmationToken;
@@ -30,7 +32,10 @@ public class User {
 //    private String preferenceName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recipe> recipes;
+    private List<Recipe> createdRecipes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recipe> favoriteRecipes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -40,6 +45,11 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Feedback> feedbacks;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    @org.hibernate.annotations.CreationTimestamp
+    private String createdAt;
 
 
     public Long getId() {
@@ -72,17 +82,39 @@ public class User {
     public void setConfirmationToken(String confirmationToken){
         this.confirmationToken = confirmationToken;
     }
-//    public String getAvatar() {
-//        return avatar;
-//    }
-//    public void setAvatar(String avatar) {
-//        this.avatar = avatar;
-//    }
-//    public String getPreferenceName() {
+    public Blob getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(Blob avatar) {
+        this.avatar = avatar;
+    }
+
+    public List<Recipe> getCreatedRecipes() {
+        return createdRecipes;
+    }
+    public void setCreatedRecipes(List<Recipe> createdRecipes) {
+        this.createdRecipes = createdRecipes;
+    }
+    public String getCreatedAt(){
+        return createdAt;
+    }
+    public void setCreatedAt(String createdAt){
+        this.createdAt = createdAt;
+    }
+
+    public List<Recipe> getFavoriteRecipes() {
+        return favoriteRecipes;
+    }
+
+    public void setFavoriteRecipes(List<Recipe> favoriteRecipes) {
+        this.favoriteRecipes = favoriteRecipes;
+    }
+    //    public String getPreferenceName() {
 //        return preferenceName;
 //    }
 //    public void setPreferenceName(String preferenceName) {
 //        this.preferenceName = preferenceName;
 //    }
+
 }
 

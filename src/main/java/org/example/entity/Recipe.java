@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,10 +30,10 @@ public class Recipe {
     private String ingredients;
 
     @Column(columnDefinition = "TEXT")
-    private String instructions;
+    private String steps;
 
-    @Lob
-    private byte[] image;
+//    @Lob
+//    private byte[] image;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -44,6 +45,17 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    @org.hibernate.annotations.CreationTimestamp
+    private String createdAt;
+
+    public Long getId(){
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName(){
         return name;
@@ -81,11 +93,31 @@ public class Recipe {
     public void setIngredients(String ingredients){
         this.ingredients = ingredients;
     }
-    public String getInstructions(){
-        return instructions;
+    public String getSteps(){
+        return steps;
     }
-    public void setInstructions(String instructions){
-        this.instructions = instructions;
+    public void setSteps(String steps){
+        this.steps = steps;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public String getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+    //    public byte[] getImage(){
+//        return image;
+//    }
+//    public void setImage(byte[] image){
+//        this.image = image;
+//    }
 }
 

@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>CulinaryExchange</title>
-    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 <%--    <link rel="stylesheet" href="./styles/header.css">--%>
 </head>
 <body>

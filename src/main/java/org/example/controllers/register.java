@@ -99,7 +99,7 @@ public class register extends HttpServlet {
                     userDao.addPreferenceToUser(user, preference);
                 }
             }
-            response.sendRedirect("/login");
+            response.sendRedirect(getServletContext().getContextPath()+"/login");
         } catch (DbException e) {
             e.printStackTrace();
             getServletContext().getRequestDispatcher("/WEB-INF/views/registerFailed.jsp")

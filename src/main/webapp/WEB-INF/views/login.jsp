@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
-    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 <header>
@@ -19,7 +19,7 @@
 
 <main>
     <h2>Вход в систему</h2>
-    <form action="login" method="post">
+    <form action="${pageContext.request.contextPath}/login" method="post">
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -34,6 +34,9 @@
                 <span class="error">${errors['password']}</span>
             </c:if>
         </div>
+        <c:if test="${not empty param.returnUrl}">
+            <input type="hidden" name="returnUrl" value="${param.returnUrl}">
+        </c:if>
         <div>
             <button type="submit">Войти</button>
         </div>
