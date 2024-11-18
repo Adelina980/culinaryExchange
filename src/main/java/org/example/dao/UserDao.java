@@ -8,6 +8,7 @@ import org.example.util.DbException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class UserDao {
     private ConnectionProvider connectionProvider;
@@ -61,17 +62,15 @@ public class UserDao {
             Long preferenceId = preference.getId();
             statement.setLong(1, userId);
             statement.setLong(2, preferenceId);
-
-
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Long generatedId = resultSet.getLong("id");
-                UserPreference userPreference = new UserPreference();
-                userPreference.setUser(user);
-                userPreference.setPreference(preference);
-                userPreference.setId(generatedId);
-//
-            }
+//            if (resultSet.next()) {
+//                Long generatedId = resultSet.getLong("id");
+//                UserPreference userPreference = new UserPreference();
+//                userPreference.setUser(user);
+//                userPreference.setPreference(preference);
+//                userPreference.setId(generatedId);
+////
+//            }
 
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
@@ -228,6 +227,7 @@ public class UserDao {
         }
         return null;
     }
+
 
 
 

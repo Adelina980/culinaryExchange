@@ -20,10 +20,18 @@
         <img src="${user.avatar}" alt="Аватар пользователя" class="avatar">
         <h2>${user.username}</h2>
         <p>Email: ${user.email}</p>
-        <p>Любимые кухни: ${userPreference.getPreference().getPreferenceName()}</p>
+        <p>Любимые кухни:
+            <c:forEach var="userPreferenceEl" items="${userPreference}">
+        <ul>
+            <li>
+                    ${userPreferenceEl}
+            </li>
+        </ul>
+
+        </c:forEach></p>
         <p>Рейтинг: ${userRating}</p>
         <p>Профиль был создан: ${createdAt}</p>
-<%--        <p>Достижения: ${user.achievements}</p>--%>
+        <%--        <p>Достижения: ${user.achievements}</p>--%>
         <a href="${pageContext.request.contextPath}/profile/edit" class="btn">Редактировать профиль</a>
     </div>
 
@@ -35,10 +43,13 @@
                     <li>
                         <a href="/recipe/${recipe.id}">${recipe.name}</a>
                         <a href="${pageContext.request.contextPath}/recipe/edit/${recipe.id}" class="edit-btn">Редактировать</a>
-                        <form id="deleteForm-${recipe.id}" action="${pageContext.request.contextPath}/cookbook" method="post" style="display: none;">
+                        <form id="deleteForm-${recipe.id}" action="${pageContext.request.contextPath}/cookbook"
+                              method="post" style="display: none;">
                             <input type="hidden" name="recipeId" value="${recipe.id}">
                         </form>
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();" class="delete-btn">Удалить</a>
+                        <a href="#"
+                           onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();"
+                           class="delete-btn">Удалить</a>
                     </li>
                 </c:forEach>
             </ul>
@@ -55,8 +66,12 @@
                 <c:forEach var="favoriteRecipe" items="${favoriteRecipes}">
                     <li>
                         <a href="/recipe/${favoriteRecipe.id}">${favoriteRecipe.name}</a>
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('removeForm-${favoriteRecipe.id}').submit();" class="remove-btn">Удалить из избранного</a>
-                        <form id="removeForm-${favoriteRecipe.id}" action="${pageContext.request.contextPath}/favoriteRecipes" method="post" style="display: none;">
+                        <a href="#"
+                           onclick="event.preventDefault(); document.getElementById('removeForm-${favoriteRecipe.id}').submit();"
+                           class="remove-btn">Удалить из избранного</a>
+                        <form id="removeForm-${favoriteRecipe.id}"
+                              action="${pageContext.request.contextPath}/favoriteRecipes" method="post"
+                              style="display: none;">
                             <input type="hidden" name="action" value="remove">
                             <input type="hidden" name="recipeId" value="${favoriteRecipe.id}">
                         </form>

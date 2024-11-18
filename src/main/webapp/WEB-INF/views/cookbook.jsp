@@ -36,7 +36,7 @@
           <div class="recipe-item">
 <%--            <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image">--%>
             <h4>
-              <a href="/recipe/${recipe.id}"> ${recipe.name}</a>
+              <a href="${pageContext.request.contextPath}/recipe/${recipe.id}"> ${recipe.name}</a>
             </h4>
             <p>${recipe.description}</p>
             <p>Время приготовления: ${recipe.preparationTime} мин</p>

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserPreferenceDao {
     ConnectionProvider connectionProvider;
@@ -72,5 +74,37 @@ public class UserPreferenceDao {
             throw new RuntimeException(e);
         }
         return null;
+    }
+    public List<String> getPreferencesByUserId(Long userId) throws DbException {
+        List<String> preferences = new ArrayList<>();
+        String sql = "SELECT preference_id FROM \"UserPreference\" WHERE user_id = ?";
+
+        try (Connection connection = connectionProvider.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    PreferenceDao preferenceDao = new PreferenceDao();
+                    Preference preference = preferenceDao.findById(resultSet.getLong("preference_id"));
+                    preferences.add(preference.getPreferenceName());
+                }
+            }
+        } catch (SQLException e) {
+            throw new DbException("Ошибка при выполнении запроса getPreferencesByUserId", e);
+        }
+        return preferences;
+    }
+
+    public void deletePreferences(Long userId) throws DbException {
+        try (Connection connection = connectionProvider.getInstance().getConnection()) {
+            // Удаление существующих Preferences
+            PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM \"UserPreference\" WHERE user_id = ?");
+            deleteStatement.setLong(1, userId);
+            deleteStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DbException("Ошибка при выполнении запроса setPreferences", e);
+        }
     }
 }

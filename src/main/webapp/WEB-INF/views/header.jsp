@@ -9,15 +9,15 @@
             <li><img src="/logo.png" alt="Иконка сайта" class="site-icon"></li>
             <li><h1 class="site-title">Culinary Exchange</h1></li>
         </div>
-        <li><a href="/">Главная</a></li>
-        <li><a href="/profile">Профиль</a></li>
-        <li><a href="/recipe/create">Создать рецепт</a></li>
-        <li><a href="/cookbook">Мои рецепты</a></li>
-        <li><a href="/favoriteRecipes">Любимые рецепты</a></li>
-        <li><a href="/search">Поиск рецептов</a></li>
-        <li><a href="/challenges">Челленджи</a></li>
-        <li><a href="/feedback">Обратная связь</a></li>
-        <form action="/search" method="get">
+        <li><a href="${pageContext.request.contextPath}/">Главная</a></li>
+        <li><a href="${pageContext.request.contextPath}/profile">Профиль</a></li>
+        <li><a href="${pageContext.request.contextPath}/recipe/create">Создать рецепт</a></li>
+        <li><a href="${pageContext.request.contextPath}/cookbook">Мои рецепты</a></li>
+        <li><a href="${pageContext.request.contextPath}/favoriteRecipes">Любимые рецепты</a></li>
+        <li><a href="${pageContext.request.contextPath}/search">Поиск рецептов</a></li>
+        <li><a href="${pageContext.request.contextPath}/challenges">Челленджи</a></li>
+        <li><a href="${pageContext.request.contextPath}/feedback">Обратная связь</a></li>
+        <form action="${pageContext.request.contextPath}/search" method="get">
             <input type="text" name="query" placeholder="Поиск рецептов...">
             <button type="submit">Поиск</button>
         </form>

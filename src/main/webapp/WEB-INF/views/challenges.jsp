@@ -14,7 +14,7 @@
     <h1>Кулинарные челленджи</h1>
     <nav>
         <ul>
-            <li><a href="index.jsp">Главная</a></li>
+            <li><a href="mainPage.jsp">Главная</a></li>
             <li><a href="profile.jsp">Профиль</a></li>
             <li><a href="logout.jsp">Выйти</a></li>
         </ul>

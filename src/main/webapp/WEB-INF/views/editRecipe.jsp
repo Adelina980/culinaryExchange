@@ -32,14 +32,11 @@
         <div class="form-group">
             <label>Категория:</label>
             <div>
-                <c:forEach var="preference" items="${preferences}">
-                    <div>
-                        <c:set var="isChecked" value="${fn:contains(recipe.category, preference)}" />
-                        <input type="radio" id="preference-${preference}" name="preferences" value="${preference}"
-                               <c:if test="${isChecked}">checked</c:if>/>
-                        <label for="preference-${preference}">${preference}</label>
-                    </div>
-                </c:forEach>
+                <select id="preferences" name="preferences" multiple>
+                    <c:forEach items="${preferences}" var="preference">
+                        <option value="${preference.name}" <c:if test="${userPreferences.contains(preference)}">selected</c:if>>${preference.name}</option>
+                    </c:forEach>
+                </select>
             </div>
         </div>
 

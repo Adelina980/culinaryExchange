@@ -1,10 +1,7 @@
 package org.example.controllers;
 
 import org.example.dao.*;
-import org.example.entity.Recipe;
-import org.example.entity.User;
-import org.example.entity.UserPreference;
-import org.example.entity.Comment;
+import org.example.entity.*;
 import org.example.service.UserService;
 
 import javax.servlet.ServletException;
@@ -36,12 +33,12 @@ public class profile extends HttpServlet {
             CommentDao commentDao = new CommentDao();
             RatingDao ratingDao = new RatingDao();
 
-            // Получение данных пользователя из базы данных или другого источника
+
             User user = userDao.findById(currentUser.getId());
             List<Recipe> createdRecipes = recipeDao.findCreatedRecipesByUserId(user.getId());
             List<Recipe> favoriteRecipes = recipeDao.findFavoriteRecipesByUserId(user.getId());
             List<Comment> userComments = commentDao.findByUserId(user.getId());
-            UserPreference userPreference = userPreferenceDao.getUserPreference(user.getId());
+            List<String> userPreference = userPreferenceDao.getPreferencesByUserId(user.getId());
             double userRating = ratingDao.calculateUserAverageRating(currentUser.getId());
             String createdAt = user.getCreatedAt();
 

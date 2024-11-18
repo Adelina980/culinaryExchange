@@ -15,16 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/profile/edit")
 public class editProfile extends HttpServlet {
     private final UserDao userDao = new UserDao();
     private final UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
+    private final PreferenceDao preferenceDao = new PreferenceDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PreferenceDao preferenceDao = new PreferenceDao();
         List<String> preferences = preferenceDao.getPreferences();
         request.setAttribute("preferences", preferences);
 
@@ -44,13 +45,19 @@ public class editProfile extends HttpServlet {
             double userRating = ratingDao.calculateUserAverageRating(user.getId());
 
             UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
-            UserPreference userPreference = userPreferenceDao.getUserPreference(user.getId());
-            Preference category = userPreference.getPreference();
+            List<String> category = null;
+            try {
+                category = userPreferenceDao.getPreferencesByUserId(user.getId());
+            } catch (DbException e) {
+                throw new RuntimeException(e);
+            }
+
+
 
             request.setAttribute("user", user);
             request.setAttribute("createdAt", createdAt);
             request.setAttribute("userRating", userRating);
-            request.setAttribute("category", category.getPreferenceName());
+            request.setAttribute("category", category);
             request.getRequestDispatcher("/WEB-INF/views/editProfile.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Вы не можете редактировать этот рецепт.");
@@ -75,15 +82,39 @@ public class editProfile extends HttpServlet {
         updatedUser.setEmail(email);
 
         userDao.updateUser(updatedUser);
-        for(String preference: preferences){
-            UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
-            UserPreference userPreference= userPreferenceDao.getUserPreference(updatedUser.getId());
-            PreferenceDao preferenceDao = new PreferenceDao();
-            Preference pref = preferenceDao.findByPreferenceName(preference);
-            userPreference.setPreference(pref);
-            userPreferenceDao.updateUserPreference(userPreference);
+        UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
+        try {
+            userPreferenceDao.deletePreferences(updatedUser.getId());
+        } catch (DbException e) {
+            throw new RuntimeException(e);
         }
 
+        if (preferences != null && preferences.length > 0) {
+            for (String preference : preferences) {
+                try {
+                    userDao.addPreferenceToUser(updatedUser, preference);
+                } catch (DbException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+
+//        List<Preference> newPreferences = new ArrayList<>();
+//        if (selectedPreferences != null) {
+//            for (String preferenceName : selectedPreferences) {
+//                Preference preference = preferenceDao.findByPreferenceName(preferenceName);
+//                if (preference != null) {
+//                    newPreferences.add(preference);
+//                }
+//            }
+//        }
+//        try {
+//            userPreferenceDao.setPreferences(updatedUser.getId(), newPreferences);
+//        } catch (DbException e) {
+//            throw new RuntimeException(e);
+//        }
 
         response.sendRedirect(request.getContextPath() + "/profile");
     }
