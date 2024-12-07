@@ -1,11 +1,14 @@
 package org.example.controllers;
 
-import org.example.dao.UserDao;
+import org.example.dao.*;
 import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.util.DbException;
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +20,19 @@ import java.util.Map;
 
 @WebServlet("/login")
 public class login extends HttpServlet {
-    private UserDao userDao = new UserDao();
+    private UserDao userDao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userDao = (UserDao) getServletContext().getAttribute("userDao");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,7 +55,7 @@ public class login extends HttpServlet {
         if (!errors.isEmpty()) {
             request.setAttribute("errors", errors);
             request.setAttribute("email", email);
-            getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
             return;
         }
 
@@ -55,7 +65,7 @@ public class login extends HttpServlet {
                 errors.put("login", "Неверный email или пароль.");
                 request.setAttribute("errors", errors);
                 request.setAttribute("email", email);
-                getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
                 return;
             }
 
@@ -66,13 +76,13 @@ public class login extends HttpServlet {
                 response.sendRedirect(returnUrl);
             } else {
 //                response.sendRedirect(getServletContext().getContextPath()+"/profile");
-                response.sendRedirect(getServletContext().getContextPath()+"/main");
+                response.sendRedirect(request.getContextPath() + "/main");
             }
 
 
         } catch (DbException e) {
             e.printStackTrace();
-            getServletContext().getRequestDispatcher("/WEB-INF/views/loginFailed.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/loginFailed.jsp").forward(request, response);
         }
     }
 

@@ -13,7 +13,7 @@
 <body>
 <header>
     <nav>
-        <a href="/main">Главная</a>
+        <a href="${pageContext.request.contextPath}/main">Главная</a>
     </nav>
 </header>
 
@@ -43,7 +43,7 @@
     </form>
 
 
-    <a class="nav-link text-center mt-3" href="/register">Регистрация</a>
+    <a class="nav-link text-center mt-3" href="${pageContext.request.contextPath}/register">Регистрация</a>
 <%--    <a href="/forgotPassword">Забыли пароль?</a>--%>
 
 

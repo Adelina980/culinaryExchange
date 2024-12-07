@@ -17,11 +17,13 @@ public class UserDao {
 //        this.connectionProvider = connectionProvider;
 //    }
 
-    public UserDao() {
+    public UserDao(ConnectionProvider connectionProvider) {
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -31,7 +33,7 @@ public class UserDao {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = today.format(formatter);
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, user.getUsername());
@@ -46,14 +48,12 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return user;
     }
     public void addPreferenceToUser(User user, String preferenceName) throws DbException {
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement("INSERT INTO \"UserPreference\" (user_id, preference_id) VALUES (?, ?) RETURNING id")) {
 //            Long userId = getUserIdByName(userName);
             Preference preference = getPreferenceByName(preferenceName);
@@ -80,7 +80,7 @@ public class UserDao {
 
 
     private Preference getPreferenceByName(String preferenceName) throws DbException {
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT \"id\" FROM \"Preference\" WHERE \"preferenceName\" = ?")) {
             statement.setString(1, preferenceName);
             ResultSet resultSet = statement.executeQuery();
@@ -124,7 +124,7 @@ public class UserDao {
 
     public boolean isUsernameExists(String username) throws DbException {
         String sql = "SELECT COUNT(*) FROM \"User\" WHERE username = ?";
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -139,7 +139,7 @@ public class UserDao {
 
     public boolean isEmailExists(String email) throws DbException {
         String sql = "SELECT COUNT(*) FROM \"User\" WHERE email = ?";
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
@@ -156,7 +156,7 @@ public class UserDao {
         User user = null;
         String sql = "SELECT * FROM \"User\" WHERE email = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, email);
@@ -182,7 +182,7 @@ public class UserDao {
         String sql = "SELECT * FROM \"User\" WHERE id = ?";
         User user = null;
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
@@ -202,15 +202,13 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return user;
     }
 
     public User updateUser(User updatedUser) {
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"User\" SET username = ?, email = ? WHERE id = ?")) {
 //            preparedStatement.setBlob(1, updatedUser.getAvatar());
             preparedStatement.setString(1, updatedUser.getUsername());
@@ -222,8 +220,6 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
         return null;
     }

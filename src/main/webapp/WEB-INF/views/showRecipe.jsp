@@ -39,7 +39,7 @@
     </div>
 
     <div class="actions">
-        <form action="/saveToFavorites" method="post">
+        <form action="${pageContext.request.contextPath}/saveToFavorites" method="post">
             <input type="hidden" name="recipeId" value="${recipe.id}">
             <button type="submit">Сохранить рецепт в любимые</button>
         </form>

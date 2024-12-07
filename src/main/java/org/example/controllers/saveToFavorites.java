@@ -6,6 +6,7 @@ import org.example.dao.UserFavoriteRecipesDao;
 import org.example.service.UserService;
 import org.example.entity.User;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,14 +16,16 @@ import java.io.IOException;
 
 @WebServlet("/saveToFavorites")
 public class saveToFavorites extends HttpServlet {
-    private UserFavoriteRecipesDao userFavoriteRecipesDao;
     private UserService userService;
+    private UserFavoriteRecipesDao userFavoriteRecipesDao;
 
     @Override
-    public void init() throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         // Инициализация сервисов
-        userFavoriteRecipesDao = new UserFavoriteRecipesDao();
-        userService = new UserService();
+        userService = (UserService) getServletContext().getAttribute("userService");
+        userFavoriteRecipesDao = (UserFavoriteRecipesDao) getServletContext().getAttribute("userFavoriteRecipesDao");
+
     }
 
     @Override

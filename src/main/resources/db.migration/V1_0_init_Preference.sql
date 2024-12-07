@@ -1,0 +1,6 @@
+-- create sequence /"Preference_id_seq/";
+--
+-- create table /"Preference/" (
+--                        id bigint primary key default nextval('"Preference_id_seq"'::regclass),
+--                        /"preferenceName/" character varying(255),
+-- );

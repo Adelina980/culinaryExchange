@@ -4,6 +4,7 @@ import org.example.dao.*;
 import org.example.entity.*;
 import org.example.service.UserService;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,28 @@ import java.util.List;
 
 @WebServlet("/profile")
 public class profile extends HttpServlet {
+    private UserDao userDao;
+    private RecipeDao recipeDao;
+    private UserPreferenceDao userPreferenceDao;
+    private CommentDao commentDao;
+    private RatingDao ratingDao;
+    private UserService userService;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userDao = (UserDao) getServletContext().getAttribute("userDao");
+        recipeDao = (RecipeDao) getServletContext().getAttribute("recipeDao");
+        userPreferenceDao = (UserPreferenceDao) getServletContext().getAttribute("userPreferenceDao");
+        commentDao = (CommentDao) getServletContext().getAttribute("commentDao");
+        ratingDao = (RatingDao) getServletContext().getAttribute("ratingDao");
+        userService = (UserService) getServletContext().getAttribute("userService");
+
+
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserService userService = new UserService();
+
         User currentUser = userService.getUser(request, response);
 
         if (currentUser == null) {
@@ -27,11 +46,6 @@ public class profile extends HttpServlet {
         }
 
         try {
-            UserDao userDao = new UserDao();
-            RecipeDao recipeDao = new RecipeDao();
-            UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
-            CommentDao commentDao = new CommentDao();
-            RatingDao ratingDao = new RatingDao();
 
 
             User user = userDao.findById(currentUser.getId());
@@ -58,7 +72,7 @@ public class profile extends HttpServlet {
         }
 
         // Переход на страницу профиля
-        getServletContext().getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
     }
 }
 

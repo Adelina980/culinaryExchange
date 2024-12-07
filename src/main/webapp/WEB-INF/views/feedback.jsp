@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Обратная связь</title>
-    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
     <h1>Обратная связь</h1>
     <p>Мы рады вашим отзывам и предложениям! Пожалуйста, заполните форму ниже.</p>
 
-    <form action="submitFeedback.jsp" method="post" enctype="multipart/form-data">
+    <form action="${pageContext.request.contextPath}/submitFeedback" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Ваше имя:</label>
             <input type="text" id="name" name="name" required>

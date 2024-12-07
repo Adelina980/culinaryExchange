@@ -10,6 +10,6 @@ import java.io.IOException;
 @WebServlet("/search")
 public class search extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        getServletContext().getRequestDispatcher("/WEB-INF/views/(search).jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/(search).jsp").forward(request, response);
     }
 }

@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,26 +16,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.example.dao.PreferenceDao;
-import org.example.dao.UserDao;
+import org.example.dao.*;
 import org.example.entity.Preference;
 import org.example.entity.User;
 import org.example.util.ConnectionProvider;
 import org.example.util.DbException;
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 
 @WebServlet("/register")
 public class register extends HttpServlet {
-    private UserDao userDao = new UserDao();
+    private UserDao userDao;
+    private PreferenceDao preferenceDao;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userDao = (UserDao) getServletContext().getAttribute("userDao");
+        preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
+    }
 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PreferenceDao preferenceDao = new PreferenceDao();
         List<String> preferences = preferenceDao.getPreferences();
         request.setAttribute("preferences", preferences);
-        getServletContext().getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
 
     @Override
@@ -74,7 +80,7 @@ public class register extends HttpServlet {
             }
 
             if (!errors.isEmpty()) {
-                PreferenceDao preferenceDao = new PreferenceDao();
+
                 List<String> preferencesList = preferenceDao.getPreferences();
                 request.setAttribute("preferences", preferencesList);
 
@@ -99,10 +105,10 @@ public class register extends HttpServlet {
                     userDao.addPreferenceToUser(user, preference);
                 }
             }
-            response.sendRedirect(getServletContext().getContextPath()+"/login");
+            response.sendRedirect(request.getContextPath()+"/login");
         } catch (DbException e) {
             e.printStackTrace();
-            getServletContext().getRequestDispatcher("/WEB-INF/views/registerFailed.jsp")
+            request.getRequestDispatcher("/WEB-INF/views/registerFailed.jsp")
                     .forward(request, response);
         }
     }

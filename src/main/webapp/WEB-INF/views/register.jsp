@@ -14,13 +14,13 @@
 <body>
 <header>
     <nav>
-        <a href="/main">Главная</a>
+        <a href="${pageContext.request.contextPath}/main">Главная</a>
     </nav>
 </header>
 
 <main>
     <h2>Регистрация нового пользователя</h2>
-    <form action="register" method="post">
+    <form action="${pageContext.request.contextPath}/register" method="post">
         <div>
             <label for="name">Имя:</label>
             <input type="text" id="name" name="name" required>
@@ -65,7 +65,7 @@
         </div>
     </form>
 
-    <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
+    <p>Уже есть аккаунт? <a href="${pageContext.request.contextPath}/login">Войти</a></p>
 </main>
 
 <%@ include file="/WEB-INF/views/footer.jsp" %>

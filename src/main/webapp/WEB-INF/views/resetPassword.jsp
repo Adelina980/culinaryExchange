@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сброс пароля</title>
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 <div class="reset-password-container">
     <h2>Сброс пароля</h2>
-    <form action="send-reset-link" method="post">
+    <form action="${pageContext.request.contextPath}/send-reset-link" method="post">
         <div class="form-group">
             <label for="email">Введите ваш email:</label>
             <input type="email" id="email" name="email" required>

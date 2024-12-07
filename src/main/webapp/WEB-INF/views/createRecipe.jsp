@@ -16,7 +16,7 @@
 <div class="recipe-form-container">
   <h1>Создать новый рецепт</h1>
 
-  <form action="/recipe/create" method="post" enctype="multipart/form-data">
+  <form action="${pageContext.request.contextPath}/recipe/create" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="title">Название рецепта:</label>
       <input type="text" id="title" name="title" required>

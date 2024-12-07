@@ -8,6 +8,7 @@ import org.example.entity.UserPreference;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,18 +21,30 @@ import java.util.List;
 
 @WebServlet("/profile/edit")
 public class editProfile extends HttpServlet {
-    private final UserDao userDao = new UserDao();
-    private final UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
-    private final PreferenceDao preferenceDao = new PreferenceDao();
+    private UserDao userDao;
+    private RatingDao ratingDao;
+    private PreferenceDao preferenceDao;
+    private UserService userService;
+    private UserPreferenceDao userPreferenceDao;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userDao = (UserDao) getServletContext().getAttribute("userDao");
+        ratingDao = (RatingDao) getServletContext().getAttribute("ratingDao");
+        preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
+        userPreferenceDao = (UserPreferenceDao) getServletContext().getAttribute("userPreferenceDao");
+        userService = (UserService) getServletContext().getAttribute("userService");
+
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<String> preferences = preferenceDao.getPreferences();
         request.setAttribute("preferences", preferences);
 
-        UserService userService = new UserService();
+
         User currentUser = userService.getUser(request, response);
-        UserDao userDao = new UserDao();
+
         User user = userDao.findById(currentUser.getId());
 
         if (user != null) {
@@ -41,10 +54,10 @@ public class editProfile extends HttpServlet {
             }
 
             String createdAt = user.getCreatedAt();
-            RatingDao ratingDao = new RatingDao();
+
             double userRating = ratingDao.calculateUserAverageRating(user.getId());
 
-            UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
+
             List<String> category = null;
             try {
                 category = userPreferenceDao.getPreferencesByUserId(user.getId());
@@ -82,7 +95,7 @@ public class editProfile extends HttpServlet {
         updatedUser.setEmail(email);
 
         userDao.updateUser(updatedUser);
-        UserPreferenceDao userPreferenceDao = new UserPreferenceDao();
+
         try {
             userPreferenceDao.deletePreferences(updatedUser.getId());
         } catch (DbException e) {
@@ -101,20 +114,6 @@ public class editProfile extends HttpServlet {
         }
 
 
-//        List<Preference> newPreferences = new ArrayList<>();
-//        if (selectedPreferences != null) {
-//            for (String preferenceName : selectedPreferences) {
-//                Preference preference = preferenceDao.findByPreferenceName(preferenceName);
-//                if (preference != null) {
-//                    newPreferences.add(preference);
-//                }
-//            }
-//        }
-//        try {
-//            userPreferenceDao.setPreferences(updatedUser.getId(), newPreferences);
-//        } catch (DbException e) {
-//            throw new RuntimeException(e);
-//        }
 
         response.sendRedirect(request.getContextPath() + "/profile");
     }

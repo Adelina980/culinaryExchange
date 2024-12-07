@@ -15,11 +15,13 @@ public class UserFavoriteRecipesDao {
     private ConnectionProvider connectionProvider;
 
 
-    public UserFavoriteRecipesDao() {
+    public UserFavoriteRecipesDao(ConnectionProvider connectionProvider) {
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -27,7 +29,7 @@ public class UserFavoriteRecipesDao {
         String checkSql = "SELECT COUNT(*) FROM \"UserFavoriteRecipes\" WHERE user_id = ? AND recipe_id = ?";
         String insertSql = "INSERT INTO \"UserFavoriteRecipes\" (user_id, recipe_id) VALUES (?, ?) RETURNING id";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement checkStatement = connection.prepareStatement(checkSql);
              PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
 
@@ -40,7 +42,7 @@ public class UserFavoriteRecipesDao {
                 return;
             }
 
-            RecipeDao recipeDao = new RecipeDao();
+            RecipeDao recipeDao = new RecipeDao(connectionProvider);
             Recipe recipe = recipeDao.findById(recipeId);
             // Выполняем вставку
             insertStatement.setLong(1, user.getId());
@@ -63,7 +65,7 @@ public class UserFavoriteRecipesDao {
     public void removeRecipeFromFavorites(User user, Long recipeId) throws DbException {
         String deleteSql = "DELETE FROM \"UserFavoriteRecipes\" WHERE user_id = ? AND recipe_id = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(deleteSql)) {
 
             // Выполняем удаление

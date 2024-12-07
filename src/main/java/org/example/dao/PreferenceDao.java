@@ -16,18 +16,20 @@ import java.util.List;
 public class PreferenceDao {
     ConnectionProvider connectionProvider;
 
-    public PreferenceDao() {
+    public PreferenceDao(ConnectionProvider connectionProvider) {
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public List<String> getPreferences() {
         List<String> preferences = new ArrayList<>();
 
-        try (Connection connection = ConnectionProvider.getInstance().getConnection()) {
+        try (Connection connection = connectionProvider.getConnection()) {
             String query = "SELECT \"preferenceName\" FROM \"Preference\"";
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
@@ -37,8 +39,6 @@ public class PreferenceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            e.printStackTrace();
         }
         return preferences;
     }
@@ -47,7 +47,7 @@ public class PreferenceDao {
         String sql = "SELECT * FROM \"Preference\" WHERE id = ?";
         Preference preference = null;
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
@@ -63,8 +63,6 @@ public class PreferenceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return preference;
@@ -74,7 +72,7 @@ public class PreferenceDao {
         String sql = "SELECT * FROM \"Preference\" WHERE preferenceName = ?";
         Preference preference = null;
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, preferenceName);
@@ -90,8 +88,6 @@ public class PreferenceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return preference;

@@ -10,6 +10,6 @@ import java.io.IOException;
 @WebServlet("/feedback")
 public class feedback extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        getServletContext().getRequestDispatcher("/WEB-INF/views/feedback.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/feedback.jsp").forward(request, response);
     }
  }

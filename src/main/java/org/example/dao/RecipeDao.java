@@ -17,11 +17,13 @@ import java.util.List;
 public class RecipeDao {
     private ConnectionProvider connectionProvider;
 
-    public RecipeDao(){
+    public RecipeDao(ConnectionProvider connectionProvider){
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -32,7 +34,7 @@ public class RecipeDao {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = today.format(formatter);
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, recipe.getName());
@@ -53,8 +55,6 @@ public class RecipeDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return recipe;
@@ -65,7 +65,7 @@ public class RecipeDao {
         String sql = "SELECT * FROM \"Recipe\" WHERE user_id = ?";
         List<Recipe> recipes = new ArrayList<>();
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, userId);
@@ -90,8 +90,6 @@ public class RecipeDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return recipes;
@@ -101,14 +99,14 @@ public class RecipeDao {
         String sql = "SELECT * FROM \"UserFavoriteRecipes\" WHERE user_id = ?";
         List<Recipe> recipes = new ArrayList<>();
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                RecipeDao recipeDao = new RecipeDao();
+                RecipeDao recipeDao = new RecipeDao(connectionProvider);
                 Recipe recipe = recipeDao.findById(resultSet.getLong("recipe_id"));
 
 
@@ -116,8 +114,6 @@ public class RecipeDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return recipes;
@@ -127,7 +123,7 @@ public class RecipeDao {
         String sql = "SELECT * FROM \"Recipe\" WHERE id = ?";
         Recipe recipe = null;
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
@@ -155,8 +151,6 @@ public class RecipeDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return recipe;
@@ -165,7 +159,7 @@ public class RecipeDao {
     public void deleteRecipe(Long recipeId) throws DbException {
         String sql = "DELETE FROM \"Recipe\" WHERE id = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, recipeId);
             statement.executeUpdate();
@@ -179,7 +173,7 @@ public class RecipeDao {
         String updateSql = "UPDATE \"Recipe\" SET name = ?, description = ?, category = ?, \"preparationTime\" = ?," +
                 " servings = ?, ingredients = ?, steps = ? WHERE id = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(updateSql)) {
 
             statement.setString(1, recipe.getName());

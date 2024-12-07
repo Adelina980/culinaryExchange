@@ -16,11 +16,13 @@ import java.util.List;
 public class UserPreferenceDao {
     ConnectionProvider connectionProvider;
 
-    public UserPreferenceDao() {
+    public UserPreferenceDao(ConnectionProvider connectionProvider) {
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -28,7 +30,7 @@ public class UserPreferenceDao {
         String sql = "SELECT * FROM \"UserPreference\" WHERE user_id = ?";
         UserPreference userPreference = null;
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, user_id);
@@ -36,9 +38,9 @@ public class UserPreferenceDao {
 
             if (resultSet.next()) {
                 userPreference = new UserPreference();
-                UserDao userDao = new UserDao();
+                UserDao userDao = new UserDao(connectionProvider);
                 User user = userDao.findById(user_id);
-                PreferenceDao preferenceDao = new PreferenceDao();
+                PreferenceDao preferenceDao = new PreferenceDao(connectionProvider);
                 Preference preference = preferenceDao.findById(resultSet.getLong("preference_id"));
 
                 userPreference.setId(resultSet.getLong("id"));
@@ -50,15 +52,13 @@ public class UserPreferenceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return userPreference;
     }
 
     public UserPreference updateUserPreference(UserPreference updatedUserPreference) {
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"UserPreference\" SET user_id = ?, preference_id = ? WHERE id = ?")) {
 //            preparedStatement.setBlob(1, updatedUser.getAvatar());
             preparedStatement.setLong(1, updatedUserPreference.getUser().getId());
@@ -70,8 +70,6 @@ public class UserPreferenceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
         return null;
     }
@@ -79,13 +77,13 @@ public class UserPreferenceDao {
         List<String> preferences = new ArrayList<>();
         String sql = "SELECT preference_id FROM \"UserPreference\" WHERE user_id = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setLong(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    PreferenceDao preferenceDao = new PreferenceDao();
+                    PreferenceDao preferenceDao = new PreferenceDao(connectionProvider);
                     Preference preference = preferenceDao.findById(resultSet.getLong("preference_id"));
                     preferences.add(preference.getPreferenceName());
                 }
@@ -97,7 +95,7 @@ public class UserPreferenceDao {
     }
 
     public void deletePreferences(Long userId) throws DbException {
-        try (Connection connection = connectionProvider.getInstance().getConnection()) {
+        try (Connection connection = connectionProvider.getConnection()) {
             // Удаление существующих Preferences
             PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM \"UserPreference\" WHERE user_id = ?");
             deleteStatement.setLong(1, userId);

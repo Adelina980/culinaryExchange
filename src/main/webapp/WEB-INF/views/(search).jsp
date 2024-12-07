@@ -7,15 +7,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Поиск рецептов</title>
-    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 
 <div class="search-container">
     <h1>Поиск рецептов</h1>
-    <form action="searchResults.jsp" method="get">
+    <form action="${pageContext.request.contextPath}/searchResults" method="get">
         <input type="text" name="query" placeholder="Введите ключевые слова..." required>
 
         <label for="category">Категория:</label>

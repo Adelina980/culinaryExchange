@@ -1,8 +1,6 @@
 package org.example.controllers;
 
-import org.example.dao.CommentDao;
-import org.example.dao.RatingDao;
-import org.example.dao.RecipeDao;
+import org.example.dao.*;
 import org.example.entity.Comment;
 import org.example.entity.Rating;
 import org.example.entity.Recipe;
@@ -10,6 +8,7 @@ import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,9 +19,22 @@ import java.util.List;
 
 @WebServlet("/recipe/*")
 public class showRecipe extends HttpServlet {
-    private RecipeDao recipeDao = new RecipeDao();
-    private RatingDao ratingDao = new RatingDao();
-    private CommentDao commentDao = new CommentDao();
+
+    private RecipeDao recipeDao;
+
+    private CommentDao commentDao;
+    private RatingDao ratingDao;
+    private UserService userService;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        recipeDao = (RecipeDao) getServletContext().getAttribute("recipeDao");
+        commentDao = (CommentDao) getServletContext().getAttribute("commentDao");
+        ratingDao = (RatingDao) getServletContext().getAttribute("ratingDao");
+        userService = (UserService) getServletContext().getAttribute("userService");
+
+
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -45,7 +57,7 @@ public class showRecipe extends HttpServlet {
                     double averageRating = ratingDao.calculateAverageRating(recipeId);
                     request.setAttribute("averageRating", averageRating);
 
-                    UserService userService = new UserService();
+
                     User currentUser = userService.getUser(request, response);
                     if (currentUser != null && recipe.getUser().getId().equals(currentUser.getId())) {
                         request.setAttribute("user", currentUser);
@@ -75,7 +87,7 @@ public class showRecipe extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
-        UserService userService = new UserService();
+
         User currentUser = userService.getUser(request, response);
 
         String pathInfo = request.getPathInfo();

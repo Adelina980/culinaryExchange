@@ -6,7 +6,7 @@
 <nav>
     <ul>
         <div class="logo">
-            <li><img src="/logo.png" alt="Иконка сайта" class="site-icon"></li>
+            <li><img src="${pageContext.request.contextPath}/logo.png" alt="Иконка сайта" class="site-icon"></li>
             <li><h1 class="site-title">Culinary Exchange</h1></li>
         </div>
         <li><a href="${pageContext.request.contextPath}/">Главная</a></li>
@@ -28,7 +28,7 @@
                     <a href="/logout">Выйти</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="/login">Войти</a> | <a href="/register">Зарегистрироваться</a>
+                    <a href="${pageContext.request.contextPath}/login">Войти</a> | <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
                 </c:otherwise>
             </c:choose>
         </div>

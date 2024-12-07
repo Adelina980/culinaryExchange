@@ -1,12 +1,12 @@
 package org.example.controllers;
 
-import org.example.dao.PreferenceDao;
-import org.example.dao.RecipeDao;
+import org.example.dao.*;
 import org.example.entity.Recipe;
 import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -29,11 +29,21 @@ import java.util.List;
 )
 
 public class createRecipe extends HttpServlet {
-    private RecipeDao recipeDao = new RecipeDao();
+    private RecipeDao recipeDao;
+    private PreferenceDao preferenceDao;
+    private UserService userService;
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        recipeDao = (RecipeDao) getServletContext().getAttribute("recipeDao");
+        preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
+        userService = (UserService) getServletContext().getAttribute("userService");
+
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        PreferenceDao preferenceDao = new PreferenceDao();
+
         List<String> preferences = preferenceDao.getPreferences();
         request.setAttribute("preferences", preferences);
         getServletContext().getRequestDispatcher("/WEB-INF/views/createRecipe.jsp").forward(request, response);
@@ -47,7 +57,7 @@ public class createRecipe extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
-        UserService userService = new UserService();
+
         User user = userService.getUser(request, response);
 
         String title = request.getParameter("title");
@@ -78,12 +88,12 @@ public class createRecipe extends HttpServlet {
             //        recipe.setImage(ima);
             //            recipe.setUser(user);
             recipeDao.saveRecipe(recipe, user);
-            response.sendRedirect("/cookbook");
+            response.sendRedirect(getServletContext().getContextPath()+"/cookbook");
         } catch (Exception e) {
             e.printStackTrace();
             // Обработка ошибок
             request.setAttribute("errorMessage", "Ошибка при сохранении рецепта: " + e.getMessage());
-            getServletContext().getRequestDispatcher("/WEB-INF/views/createRecipe.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/createRecipe.jsp").forward(request, response);
         }
 
 

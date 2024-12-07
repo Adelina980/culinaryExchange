@@ -18,11 +18,13 @@ import java.util.List;
 public class CommentDao {
     private ConnectionProvider connectionProvider;
 
-    public CommentDao() {
+    public CommentDao(ConnectionProvider connectionProvider) {
         try {
-            this.connectionProvider = ConnectionProvider.getInstance();
+            this.connectionProvider = connectionProvider.getInstance();
         } catch (DbException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,7 +73,7 @@ public class CommentDao {
         Comment comment = null;
         String sql = "SELECT * FROM \"Comment\" WHERE id = ?";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
@@ -79,8 +81,8 @@ public class CommentDao {
 
             if (resultSet.next()) {
                 comment = new Comment();
-                RecipeDao recipeDao = new RecipeDao();
-                UserDao userDao = new UserDao();
+                RecipeDao recipeDao = new RecipeDao(connectionProvider);
+                UserDao userDao = new UserDao(connectionProvider);
                 comment.setId(resultSet.getLong("id"));
                 comment.setRecipe(recipeDao.findById(resultSet.getLong("recipe_id")));
                 comment.setUser(userDao.findById(resultSet.getLong("user_id")));
@@ -88,8 +90,6 @@ public class CommentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
         return comment;
     }
@@ -98,15 +98,15 @@ public class CommentDao {
         List<Comment> comments = new ArrayList<>();
         String sql = "SELECT * FROM \"Comment\" WHERE recipe_id = ? ORDER BY \"createdAt\" DESC";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, recipeId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                RecipeDao recipeDao = new RecipeDao();
-                UserDao userDao = new UserDao();
+                RecipeDao recipeDao = new RecipeDao(connectionProvider);
+                UserDao userDao = new UserDao(connectionProvider);
                 Comment comment = new Comment();
                 comment.setId(resultSet.getLong("id"));
                 comment.setRecipe(recipeDao.findById(resultSet.getLong("recipe_id")));
@@ -117,8 +117,6 @@ public class CommentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
         return comments;
     }
@@ -127,15 +125,15 @@ public class CommentDao {
         List<Comment> comments = new ArrayList<>();
         String sql = "SELECT * FROM \"Comment\" WHERE user_id = ? ORDER BY \"createdAt\" DESC";
 
-        try (Connection connection = connectionProvider.getInstance().getConnection();
+        try (Connection connection = connectionProvider.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                RecipeDao recipeDao = new RecipeDao();
-                UserDao userDao = new UserDao();
+                RecipeDao recipeDao = new RecipeDao(connectionProvider);
+                UserDao userDao = new UserDao(connectionProvider);
                 Comment comment = new Comment();
                 comment.setId(resultSet.getLong("id"));
                 comment.setRecipe(recipeDao.findById(resultSet.getLong("recipe_id")));
@@ -146,8 +144,6 @@ public class CommentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
         return comments;
     }

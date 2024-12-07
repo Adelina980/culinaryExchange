@@ -5,18 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Кулинарные челленджи</title>
-    <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-    <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 <header>
     <h1>Кулинарные челленджи</h1>
     <nav>
         <ul>
-            <li><a href="mainPage.jsp">Главная</a></li>
-            <li><a href="profile.jsp">Профиль</a></li>
-            <li><a href="logout.jsp">Выйти</a></li>
+            <li><a href="${pageContext.request.contextPath}/mainPage">Главная</a></li>
+            <li><a href="${pageContext.request.contextPath}/profile">Профиль</a></li>
+            <li><a href="${pageContext.request.contextPath}/logout">Выйти</a></li>
         </ul>
     </nav>
 </header>
@@ -34,7 +34,7 @@
                         <form action="submitChallengeEntry.jsp" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="challengeId" value="${challenge.id}">
                             <label for="photo">Загрузите фото вашего блюда:</label>
-                            <input type="file" name="photo" accept="image/*" required>
+                            <input type="file" id="photo" name="photo" accept="image/*" required>
                             <button type="submit">Участвовать!</button>
                         </form>
                     </li>

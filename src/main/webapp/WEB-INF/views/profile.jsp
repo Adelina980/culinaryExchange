@@ -41,7 +41,7 @@
             <ul>
                 <c:forEach var="recipe" items="${createdRecipes}">
                     <li>
-                        <a href="/recipe/${recipe.id}">${recipe.name}</a>
+                        <a href="${pageContext.request.contextPath}/recipe/${recipe.id}">${recipe.name}</a>
                         <a href="${pageContext.request.contextPath}/recipe/edit/${recipe.id}" class="edit-btn">Редактировать</a>
                         <form id="deleteForm-${recipe.id}" action="${pageContext.request.contextPath}/cookbook"
                               method="post" style="display: none;">

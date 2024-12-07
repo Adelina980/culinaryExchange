@@ -12,7 +12,7 @@ public class StartPage extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect(getServletContext().getContextPath() + "/main");
+        resp.sendRedirect(req.getContextPath() + "/main");
 
     }
 

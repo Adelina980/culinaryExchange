@@ -7,9 +7,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Администрирование - Кулинарный обмен</title>
-  <link rel="stylesheet" href="./styles/normalize.8.0.1.css">
-  <link rel="stylesheet" href="./styles/reset.css">
-  <link rel="stylesheet" href="./styles/styles.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
 </head>
 <body>
 
@@ -43,11 +43,11 @@
           <td>${user.email}</td>
           <td>${user.status}</td>
           <td>
-            <form action="blockUser.jsp" method="post">
+            <form action="${pageContext.request.contextPath}/blockUser" method="post">
               <input type="hidden" name="userId" value="${user.id}">
               <button type="submit">Заблокировать</button>
             </form>
-            <form action="deleteUser.jsp" method="post">
+            <form action="${pageContext.request.contextPath}/deleteUser" method="post">
               <input type="hidden" name="userId" value="${user.id}">
               <button type="submit">Удалить</button>
             </form>
@@ -76,7 +76,7 @@
           <td>${recipe.title}</td>
           <td>${recipe.authorName}</td>
           <td>
-            <form action="deleteRecipe.jsp" method="post">
+            <form action="${pageContext.request.contextPath}/deleteRecipe" method="post">
               <input type="hidden" name="recipeId" value="${recipe.id}">
               <button type="submit">Удалить</button>
             </form>
