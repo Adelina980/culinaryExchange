@@ -3,7 +3,6 @@ package org.example.dao;
 import org.example.entity.Recipe;
 import org.example.entity.User;
 import org.example.entity.UserFavoriteRecipes;
-import org.example.util.ConnectionProvider;
 import org.example.util.DbException;
 
 import java.sql.Connection;
@@ -18,8 +17,6 @@ public class UserFavoriteRecipesDao {
     public UserFavoriteRecipesDao(ConnectionProvider connectionProvider) {
         try {
             this.connectionProvider = connectionProvider.getInstance();
-        } catch (DbException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,8 +1,6 @@
 package org.example.dao;
 
 import org.example.entity.Comment;
-import org.example.util.ConnectionProvider;
-import org.example.util.DbException;
 
 import java.util.List;
 
@@ -13,7 +11,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CommentDao {
     private ConnectionProvider connectionProvider;
@@ -21,8 +18,6 @@ public class CommentDao {
     public CommentDao(ConnectionProvider connectionProvider) {
         try {
             this.connectionProvider = connectionProvider.getInstance();
-        } catch (DbException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -48,8 +43,6 @@ public class CommentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
 
         return comment;
@@ -64,8 +57,6 @@ public class CommentDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (DbException e) {
-            throw new RuntimeException(e);
         }
     }
 

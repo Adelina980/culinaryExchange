@@ -1,15 +1,15 @@
 package org.example.controllers;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.dao.*;
 import org.example.entity.*;
 import org.example.service.UserService;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class profile extends HttpServlet {
     private CommentDao commentDao;
     private RatingDao ratingDao;
     private UserService userService;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -40,15 +41,13 @@ public class profile extends HttpServlet {
         User currentUser = userService.getUser(request, response);
 
         if (currentUser == null) {
-            // Если пользователь не авторизован, перенаправляем на страницу входа.
+
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
         try {
-
-
             User user = userDao.findById(currentUser.getId());
+
             List<Recipe> createdRecipes = recipeDao.findCreatedRecipesByUserId(user.getId());
             List<Recipe> favoriteRecipes = recipeDao.findFavoriteRecipesByUserId(user.getId());
             List<Comment> userComments = commentDao.findByUserId(user.getId());
@@ -71,7 +70,6 @@ public class profile extends HttpServlet {
             return;
         }
 
-        // Переход на страницу профиля
         request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
     }
 }

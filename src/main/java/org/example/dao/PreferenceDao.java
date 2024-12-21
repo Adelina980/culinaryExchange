@@ -2,9 +2,6 @@ package org.example.dao;
 
 
 import org.example.entity.Preference;
-import org.example.entity.User;
-import org.example.util.ConnectionProvider;
-import org.example.util.DbException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,8 +16,6 @@ public class PreferenceDao {
     public PreferenceDao(ConnectionProvider connectionProvider) {
         try {
             this.connectionProvider = connectionProvider.getInstance();
-        } catch (DbException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

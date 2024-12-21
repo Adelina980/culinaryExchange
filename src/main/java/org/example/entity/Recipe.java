@@ -1,9 +1,14 @@
 package org.example.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 public class Recipe {
 
@@ -32,8 +37,11 @@ public class Recipe {
     @Column(columnDefinition = "TEXT")
     private String steps;
 
-//    @Lob
-//    private byte[] image;
+    @Column(name = "createdAt", nullable = false, updatable = false)
+    private String createdAt;
+
+    @Column(nullable = true)
+    private String coverImagePath;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,79 +53,18 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratings;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    @org.hibernate.annotations.CreationTimestamp
-    private String createdAt;
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImageRecipe> images = new ArrayList<>();
 
-    public Long getId(){
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
+    public void addImage(ImageRecipe image) {
+        images.add(image);
+        image.setRecipe(this);
     }
 
-    public String getName(){
-        return name;
-    }
-    public void setName(String name){
-        this.name = name;
-    }
-    public String getDescription(){
-        return description;
-    }
-    public void setDescription(String description){
-        this.description = description;
-    }
-    public String getCategory(){
-        return category;
-    }
-    public void setCategory(String category){
-        this.category = category;
-    }
-    public Integer getPreparationTime(){
-        return preparationTime;
-    }
-    public void setPreparationTime(Integer preparationTime){
-        this.preparationTime = preparationTime;
-    }
-    public Integer getServings(){
-        return servings;
-    }
-    public void setServings(Integer servings){
-        this.servings = servings;
-    }
-    public String getIngredients(){
-        return ingredients;
-    }
-    public void setIngredients(String ingredients){
-        this.ingredients = ingredients;
-    }
-    public String getSteps(){
-        return steps;
-    }
-    public void setSteps(String steps){
-        this.steps = steps;
+    public void removeImage(ImageRecipe image) {
+        images.remove(image);
+        image.setRecipe(null);
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-    public String getCreatedAt() {
-        return createdAt;
-    }
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-    //    public byte[] getImage(){
-//        return image;
-//    }
-//    public void setImage(byte[] image){
-//        this.image = image;
-//    }
 }
 

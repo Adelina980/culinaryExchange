@@ -1,15 +1,11 @@
 package org.example.dao;
 
 import org.example.entity.Rating;
-import org.example.util.ConnectionProvider;
-import org.example.util.DbException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +15,6 @@ public class RatingDao {
     public RatingDao(ConnectionProvider connectionProvider) {
         try {
             this.connectionProvider = connectionProvider.getInstance();
-        } catch (DbException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -165,7 +159,6 @@ public class RatingDao {
 
             ResultSet resultSet = selectStatement.executeQuery();
             if (resultSet.next()) {
-                // Если оценка уже существует, обновляем её
                 try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
                     updateStatement.setDouble(1, rating.getRating());
                     updateStatement.setLong(2, rating.getUser().getId());
@@ -173,7 +166,6 @@ public class RatingDao {
                     updateStatement.executeUpdate();
                 }
             } else {
-                // Если оценки нет, добавляем новую
                 try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
                     insertStatement.setLong(1, rating.getUser().getId());
                     insertStatement.setLong(2, rating.getRecipe().getId());

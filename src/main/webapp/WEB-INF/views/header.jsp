@@ -6,7 +6,6 @@
 <nav>
     <ul>
         <div class="logo">
-            <li><img src="${pageContext.request.contextPath}/logo.png" alt="Иконка сайта" class="site-icon"></li>
             <li><h1 class="site-title">Culinary Exchange</h1></li>
         </div>
         <li><a href="${pageContext.request.contextPath}/">Главная</a></li>
@@ -15,8 +14,6 @@
         <li><a href="${pageContext.request.contextPath}/cookbook">Мои рецепты</a></li>
         <li><a href="${pageContext.request.contextPath}/favoriteRecipes">Любимые рецепты</a></li>
         <li><a href="${pageContext.request.contextPath}/search">Поиск рецептов</a></li>
-        <li><a href="${pageContext.request.contextPath}/challenges">Челленджи</a></li>
-        <li><a href="${pageContext.request.contextPath}/feedback">Обратная связь</a></li>
         <form action="${pageContext.request.contextPath}/search" method="get">
             <input type="text" name="query" placeholder="Поиск рецептов...">
             <button type="submit">Поиск</button>
@@ -25,7 +22,7 @@
             <c:choose>
                 <c:when test="${not empty user}">
                     <p>Добро пожаловать, ${user.username}!</p>
-                    <a href="/logout">Выйти</a>
+                    <a href="${pageContext.request.contextPath}/logout">Выйти</a>
                 </c:when>
                 <c:otherwise>
                     <a href="${pageContext.request.contextPath}/login">Войти</a> | <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>

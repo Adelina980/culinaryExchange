@@ -9,15 +9,22 @@
     <title>${recipe.name}</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/showRecipe.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 <div class="recipe-container">
     <h1>${recipe.name}</h1>
-<%--    <img src="${recipe.imageUrl}" alt="${recipe.title}" class="recipe-image">--%>
+
+    <c:if test="${not empty recipe.coverImagePath}">
+        <img src="${pageContext.request.contextPath}${recipe.coverImagePath}" alt="Обложка рецепта" class="recipe-cover-image">
+    </c:if>
 
     <div class="recipe-details">
         <p><strong>Описание:</strong> ${recipe.description}</p>
+        <p><strong>Категории:</strong> ${recipe.category}</p>
         <p><strong>Время приготовления:</strong> ${recipe.preparationTime} минут</p>
         <p><strong>Порции:</strong> ${recipe.servings}</p>
 
@@ -35,6 +42,15 @@
                 <li>${step}</li>
             </c:forEach>
         </ol>
+        <c:if test="${not empty images}">
+            <div class="recipe-images">
+                <h2>Другие изображения:</h2>
+                <c:forEach var="image" items="${images}">
+                    <img src="${pageContext.request.contextPath}${image.filePath}" alt="Изображение рецепта" class="recipe-image">
+                </c:forEach>
+            </div>
+        </c:if>
+
         <p><strong>Дата создания:</strong> ${recipe.createdAt}</p>
     </div>
 
@@ -45,12 +61,15 @@
         </form>
 
         <c:if test="${recipe.user.id == user.id}">
-            <a href="${pageContext.request.contextPath}/recipe/edit/${recipe.id}" class="edit-btn">Редактировать</a>
-            <form id="deleteForm-${recipe.id}" action="${pageContext.request.contextPath}/recipe/${recipe.id}" method="post" style="display: none;">
-                <input type="hidden" name="recipeId" value="${recipe.id}">
+            <form action="${pageContext.request.contextPath}/recipe/edit/${recipe.id}" class="edit-btn" method="get">
+                <button type="submit">Редактировать</button>
             </form>
-            <a href="#" onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();" class="delete-btn">Удалить</a>
-
+            <form action="${pageContext.request.contextPath}/recipe/${recipe.id}" method="post">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit"
+                        onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?');">Удалить
+                </button>
+            </form>
         </c:if>
     </div>
 

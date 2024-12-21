@@ -1,32 +1,47 @@
 package org.example.controllers;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.example.dao.*;
+import org.example.entity.ImageRecipe;
 import org.example.entity.Recipe;
 import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/recipe/edit/*")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
+        maxFileSize = 1024 * 1024 * 50, // 50 MB
+        maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
 public class editRecipe extends HttpServlet {
     private RecipeDao recipeDao;
     private PreferenceDao preferenceDao;
     private UserService userService;
+    private UserPreferenceDao userPreferenceDao;
+    private ImageRecipeDao imageRecipeDao;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         recipeDao = (RecipeDao) getServletContext().getAttribute("recipeDao");
         preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
         userService = (UserService) getServletContext().getAttribute("userService");
-
+        userPreferenceDao = (UserPreferenceDao) getServletContext().getAttribute("userPreferenceDao");
+        imageRecipeDao = (ImageRecipeDao) getServletContext().getAttribute("imageRecipeDao");
     }
 
     @Override
@@ -42,6 +57,13 @@ public class editRecipe extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Параметр id отсутствует");
             return;
         }
+        List<String> userPreferences;
+        try {
+            userPreferences = userPreferenceDao.getPreferencesByUserId(user.getId());
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+        request.setAttribute("userPreferences", userPreferences);
 
         Long recipeId;
         try {
@@ -60,6 +82,8 @@ public class editRecipe extends HttpServlet {
 
             request.setAttribute("recipe", recipe);
             request.setAttribute("createdAt", createdAt);
+            List<ImageRecipe> images = imageRecipeDao.findByRecipeId(recipeId);
+            request.setAttribute("images", images);
             request.getRequestDispatcher("/WEB-INF/views/editRecipe.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Вы не можете редактировать этот рецепт.");
@@ -96,14 +120,51 @@ public class editRecipe extends HttpServlet {
                 recipe.setIngredients(newIngridients);
                 recipe.setSteps(newSteps);
 
-                recipeDao.updateRecipe(recipe);
+                String uploadPath = request.getServletContext().getRealPath("/uploads");
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+
+                ImageRecipe coverImage = null;
+                // Сохраняем обложку
+                for (Part part : request.getParts()) {
+                    if (part.getName().equals("cover") && part.getSize() > 0) {
+                        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                        String filePath = uploadPath + File.separator + fileName;
+                        part.write(filePath);
+                        coverImage = new ImageRecipe();
+                        recipe.setCoverImagePath("/uploads/" + fileName);
+                        System.out.println(uploadPath + File.separator + fileName);
+                    }
+                }
+
+
+                List<ImageRecipe> images = imageRecipeDao.findByRecipeId(recipeId);
+                for (Part part : request.getParts()) {
+                    if (part.getName().equals("images") && part.getSize() > 0) {
+                        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+
+                        String filePath = uploadPath + File.separator + fileName;
+                        part.write(filePath);
+
+                        ImageRecipe image = new ImageRecipe();
+                        image.setFilePath("/uploads/" + fileName);
+                        System.out.println(uploadPath + fileName);
+                        recipe.addImage(image);
+                        images.add(image);
+                    }
+                }
+
+
+                recipeDao.updateRecipe(recipe, images);
                 response.sendRedirect(request.getContextPath() + "/recipe/" + recipeId);
             } else {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Вы не можете редактировать этот рецепт.");
             }
         } catch (DbException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обновлении рецепта.");
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обновлении рецепта.");
         }
     }
 }

@@ -6,12 +6,12 @@ import org.example.dao.UserFavoriteRecipesDao;
 import org.example.service.UserService;
 import org.example.entity.User;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/saveToFavorites")
@@ -22,7 +22,6 @@ public class saveToFavorites extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        // Инициализация сервисов
         userService = (UserService) getServletContext().getAttribute("userService");
         userFavoriteRecipesDao = (UserFavoriteRecipesDao) getServletContext().getAttribute("userFavoriteRecipesDao");
 
@@ -30,7 +29,6 @@ public class saveToFavorites extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Получаем ID рецепта из запроса
         String recipeIdParam = request.getParameter("recipeId");
         if (recipeIdParam == null || recipeIdParam.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Идентификатор рецепта не указан");
@@ -46,14 +44,12 @@ public class saveToFavorites extends HttpServlet {
         }
 
 
-//        User currentUser = (User) request.getSession().getAttribute("currentUser");
         User currentUser = userService.getUser(request, response);
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // Добавляем рецепт в избранное
         try {
             userFavoriteRecipesDao.addRecipeToFavorites(currentUser, recipeId);
             response.sendRedirect(request.getContextPath() + "/favoriteRecipes");

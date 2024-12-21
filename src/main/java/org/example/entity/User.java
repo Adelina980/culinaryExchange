@@ -22,14 +22,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column
-    private Blob avatar;
+    @Column(nullable = true)
+    private String avatar;
 
-    @Column
-    private String confirmationToken;
 
-//    @Column
-//    private String preferenceName;
+
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recipe> createdRecipes;
@@ -40,11 +38,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChallengeEntry> challengeEntries;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Feedback> feedbacks;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt", nullable = false, updatable = false)
@@ -76,16 +70,10 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getConfirmationToken() {
-        return confirmationToken;
-    }
-    public void setConfirmationToken(String confirmationToken){
-        this.confirmationToken = confirmationToken;
-    }
-    public Blob getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
-    public void setAvatar(Blob avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
@@ -109,12 +97,7 @@ public class User {
     public void setFavoriteRecipes(List<Recipe> favoriteRecipes) {
         this.favoriteRecipes = favoriteRecipes;
     }
-    //    public String getPreferenceName() {
-//        return preferenceName;
-//    }
-//    public void setPreferenceName(String preferenceName) {
-//        this.preferenceName = preferenceName;
-//    }
+
 
 }
 

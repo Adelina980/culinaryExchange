@@ -1,5 +1,13 @@
 package org.example.controllers;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.example.dao.*;
 import org.example.entity.Preference;
 import org.example.entity.Recipe;
@@ -8,24 +16,26 @@ import org.example.entity.UserPreference;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
-import java.sql.Blob;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
+
 @WebServlet("/profile/edit")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 10, // 10 MB
+        maxFileSize = 1024 * 1024 * 50, // 50 MB
+        maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
 public class editProfile extends HttpServlet {
     private UserDao userDao;
     private RatingDao ratingDao;
     private PreferenceDao preferenceDao;
     private UserService userService;
     private UserPreferenceDao userPreferenceDao;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -66,7 +76,6 @@ public class editProfile extends HttpServlet {
             }
 
 
-
             request.setAttribute("user", user);
             request.setAttribute("createdAt", createdAt);
             request.setAttribute("userRating", userRating);
@@ -81,40 +90,64 @@ public class editProfile extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-
-        String userId = request.getParameter("userId");
-//        Blob avatar = request.getParameter("avatar");
-        String username = request.getParameter("name");
-        String email = request.getParameter("email");
-        String[] preferences = request.getParameterValues("preferences");
-
-        User updatedUser = new User();
-        updatedUser.setId(Long.parseLong(userId));
-//        updatedUser.setAvatar(avatar);
-        updatedUser.setUsername(username);
-        updatedUser.setEmail(email);
-
-        userDao.updateUser(updatedUser);
-
         try {
-            userPreferenceDao.deletePreferences(updatedUser.getId());
-        } catch (DbException e) {
-            throw new RuntimeException(e);
-        }
 
-        if (preferences != null && preferences.length > 0) {
-            for (String preference : preferences) {
-                try {
-                    userDao.addPreferenceToUser(updatedUser, preference);
-                } catch (DbException e) {
-                    throw new RuntimeException(e);
+            String userId = request.getParameter("userId");
+            String username = request.getParameter("name");
+            String email = request.getParameter("email");
+            String[] preferences = request.getParameterValues("preferences");
+            // Обработка загруженного файла
+
+
+            User user = userDao.findById(Long.parseLong(userId));
+            if (user == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Пользователь не найден.");
+                return;
+            }
+            // Обновление аватара
+            Part filePart = request.getPart("avatar");
+
+            if (filePart != null && filePart.getSize() > 0) {
+//                String uploadPath = getServletContext().getRealPath("")  + "uploads";
+                String uploadPath = request.getServletContext().getRealPath("/uploads") ;
+
+
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
                 }
 
+                String fileName = userId + "_" + FilenameUtils.getName(filePart.getSubmittedFileName());
+                String filePath = uploadPath + File.separator + fileName;
+                filePart.write(filePath);
+
+                user.setAvatar("/uploads/" + fileName);
+                System.out.println("/uploads/" + fileName);
+//                user.setAvatar(filePath);
             }
+
+
+            // Обновление данных пользователя
+            user.setUsername(username);
+            user.setEmail(email);
+            userDao.updateUser(user);
+
+            // Обновление предпочтений
+            try {
+                userPreferenceDao.deletePreferences(user.getId());
+            } catch (DbException ex) {
+                throw new RuntimeException(ex);
+            }
+            if (preferences != null) {
+                for (String preference : preferences) {
+                    userDao.addPreferenceToUser(user, preference);
+                }
+            }
+            response.sendRedirect(request.getContextPath() + "/profile");
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
         }
 
 
-
-        response.sendRedirect(request.getContextPath() + "/profile");
     }
 }

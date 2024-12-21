@@ -9,7 +9,10 @@
     <title>Регистрация</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 <header>

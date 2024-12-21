@@ -9,18 +9,27 @@
     <title>Редактировать рецепт</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/editProfile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 
 <div class="edit-recipe-container">
     <h1>Редактировать профиль</h1>
 
-    <form action="${pageContext.request.contextPath}/profile/edit" method="post">
+    <form action="${pageContext.request.contextPath}/profile/edit" method="post" enctype="multipart/form-data">
         <input type="hidden" name="userId" value="${user.id}"/>
 
         <div class="form-group">
-            <img src="${user.avatar}" alt="Аватар пользователя" class="avatar">
+            <img src="${pageContext.request.contextPath}${user.avatar}"
+                 alt="Аватар пользователя" class="avatar">
+        </div>
+
+        <div class="form-group">
+            <label for="avatar">Изменить аватар:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*"/>
         </div>
 
         <div class="form-group">

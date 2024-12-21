@@ -2,26 +2,19 @@ package org.example.dao;
 
 
 import org.example.entity.*;
-import org.example.util.ConnectionProvider;
 import org.example.util.DbException;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class UserDao {
     private ConnectionProvider connectionProvider;
 
-//    public UserDao(ConnectionProvider connectionProvider){
-//        this.connectionProvider = connectionProvider;
-//    }
 
     public UserDao(ConnectionProvider connectionProvider) {
         try {
             this.connectionProvider = connectionProvider.getInstance();
-        } catch (DbException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -52,6 +45,7 @@ public class UserDao {
 
         return user;
     }
+
     public void addPreferenceToUser(User user, String preferenceName) throws DbException {
         try (Connection connection = connectionProvider.getConnection();
              PreparedStatement statement = connection.prepareStatement("INSERT INTO \"UserPreference\" (user_id, preference_id) VALUES (?, ?) RETURNING id")) {
@@ -63,20 +57,19 @@ public class UserDao {
             statement.setLong(1, userId);
             statement.setLong(2, preferenceId);
             ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                Long generatedId = resultSet.getLong("id");
-//                UserPreference userPreference = new UserPreference();
-//                userPreference.setUser(user);
-//                userPreference.setPreference(preference);
-//                userPreference.setId(generatedId);
-////
-//            }
+            if (resultSet.next()) {
+                Long generatedId = resultSet.getLong("id");
+                UserPreference userPreference = new UserPreference();
+                userPreference.setUser(user);
+                userPreference.setPreference(preference);
+                userPreference.setId(generatedId);
+
+            }
 
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
     }
-
 
 
     private Preference getPreferenceByName(String preferenceName) throws DbException {
@@ -98,28 +91,6 @@ public class UserDao {
         }
         return null;
     }
-
-//    public User getUserByConfirmationToken(String confirmationToken) throws DbException {
-//        try (Connection connection = connectionProvider.getInstance().getConnection();
-//             PreparedStatement statement = connection.prepareStatement("SELECT * FROM \"User\" WHERE \"confirmationToken\" = ?")) {
-//            statement.setString(1, confirmationToken);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                User user = new User();
-//                user.setId(resultSet.getLong("id"));
-//                user.setUsername(resultSet.getString("username"));
-//                user.setEmail(resultSet.getString("email"));
-//                user.setPassword(resultSet.getString("password"));
-//                user.setConfirmationToken(resultSet.getString("confirmationToken"));
-//
-//                return user;
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new DbException(e.getMessage());
-//        }
-//        return null;
-//    }
 
 
     public boolean isUsernameExists(String username) throws DbException {
@@ -160,7 +131,7 @@ public class UserDao {
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, email);
-            try(ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
 
                 if (resultSet.next()) {
                     user = new User();
@@ -168,7 +139,7 @@ public class UserDao {
                     user.setUsername(resultSet.getString("username"));
                     user.setEmail(resultSet.getString("email"));
                     user.setPassword(resultSet.getString("password"));
-//                    user.setCreatedAt(resultSet.getString("createdAt"));
+                    user.setCreatedAt(resultSet.getString("createdAt"));
 
                 }
             }
@@ -195,7 +166,7 @@ public class UserDao {
                 user.setUsername(resultSet.getString("username"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
-                user.setAvatar(resultSet.getBlob("avatar"));
+                user.setAvatar(resultSet.getString("avatar"));
                 user.setCreatedAt(resultSet.getString("createdAt"));
 
 
@@ -209,11 +180,12 @@ public class UserDao {
 
     public User updateUser(User updatedUser) {
         try (Connection connection = connectionProvider.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"User\" SET username = ?, email = ? WHERE id = ?")) {
-//            preparedStatement.setBlob(1, updatedUser.getAvatar());
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"User\" SET username = ?, email = ?, avatar = ? WHERE id = ?")) {
+
             preparedStatement.setString(1, updatedUser.getUsername());
             preparedStatement.setString(2, updatedUser.getEmail());
-            preparedStatement.setLong(3, updatedUser.getId());
+            preparedStatement.setString(3, updatedUser.getAvatar());
+            preparedStatement.setLong(4, updatedUser.getId());
             int rowsUpdated = preparedStatement.executeUpdate();
             if (rowsUpdated > 0) {
                 return updatedUser;
@@ -223,39 +195,6 @@ public class UserDao {
         }
         return null;
     }
-
-
-
-
-//    public void updateUser(User user) throws DbException {
-//
-//        try (Connection connection = connectionProvider.getInstance().getConnection()) {
-//            String sql = "UPDATE \"User\" SET \"confirmationToken\" = ? WHERE \"email\" = ?";
-//            PreparedStatement statement = connection.prepareStatement(sql);
-//
-//            statement.setString(1, user.getConfirmationToken());
-//            statement.setString(2, user.getEmail());
-//
-//            statement.executeUpdate();
-//
-//            statement.close();
-//        } catch (SQLException e) {
-//            throw new DbException("Ошибка обновления пользователя", e);
-//        }
-//    }
-
-
-//    User findById(Long id);
-//
-//    User findByEmail(String email);
-//
-//    User findByUsername(String username);
-//
-//    void delete(User user);
-//
-//    void update(User user);
-//
-//    List<User> findAll();
 
 }
 

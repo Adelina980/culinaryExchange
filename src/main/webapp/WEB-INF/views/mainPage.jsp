@@ -9,14 +9,32 @@
     <title>CulinaryExchange</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
-<%--    <link rel="stylesheet" href="./styles/header.css">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/mainPage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 
-<%--<c:set var="contentPage" value="contentBody.jsp" />--%>
-
-<%--<jsp:include page="${contentPage}" />--%>
+<c:if test="${not empty recipes}">
+    <ul class="recipe-list">
+        <c:forEach var="recipe" items="${recipes}">
+            <li class="recipe-item">
+                <a href="${pageContext.request.contextPath}/recipe/${recipe.id}">
+                    <c:if test="${not empty recipe.coverImagePath}">
+                        <img src="${pageContext.request.contextPath}${recipe.coverImagePath}" alt="${recipe.name}"
+                             class="recipe-cover">
+                    </c:if>
+                    <h3>${recipe.name}</h3>
+                    <p>${recipe.description}</p>
+                </a>
+            </li>
+        </c:forEach>
+    </ul>
+</c:if>
+<c:if test="${empty recipes}">
+    <p>К сожалению, рецепты не найдены.</p>
+</c:if>
 
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 

@@ -5,63 +5,78 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Моя кулинарная книга</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
+    <meta charset="UTF-8">
+    <title>Моя кулинарная книга</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/cookbook.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 
-<div class="cookbook-container">
-  <h1>Моя кулинарная книга</h1>
+<main class="cookbook-container">
+    <h1>Моя кулинарная книга</h1>
 
-  <c:if test="${not empty user.createdRecipes}">
-  <div class="categories">
-    <h2>Категории</h2>
-  <div class="categories">
-    <ul>
-        <c:forEach var="preference" items="${preferences}">
-          <div>
-              <li><a href="#${preference}">${preference}</a></li>
-          </div>
-        </c:forEach>
-    </ul>
-  </div>
-  <div class="recipes">
-    <c:forEach var="preference" items="${preferences}">
-      <h3 id="${preference}">${preference}</h3>
-      <c:forEach var="recipe" items="${user.createdRecipes}" varStatus="status">
-        <c:if test="${recipe.category == preference}">
-          <div class="recipe-item">
-<%--            <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image">--%>
-            <h4>
-              <a href="${pageContext.request.contextPath}/recipe/${recipe.id}"> ${recipe.name}</a>
-            </h4>
-            <p>${recipe.description}</p>
-            <p>Время приготовления: ${recipe.preparationTime} мин</p>
-            <a href="${pageContext.request.contextPath}/recipe/edit/${recipe.id}" class="edit-btn">Редактировать</a>
-            <form id="deleteForm-${recipe.id}" action="${pageContext.request.contextPath}/cookbook" method="post" style="display: none;">
-                <input type="hidden" name="recipeId" value="${recipe.id}">
-            </form>
-            <a href="#" onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();" class="delete-btn">Удалить</a>
+    <c:if test="${not empty user.createdRecipes}">
+        <section class="categories-section">
+            <h2>Категории</h2>
+            <h3>Быстрый переход по категориям</h3>
 
-          </div>
-        </c:if>
-      </c:forEach>
-    </c:forEach>
-  </div>
+            <div class="categories">
+                <c:forEach var="preference" items="${preferences}">
+                    <li><a href="#${preference}" class="category-link">${preference}</a></li>
+                </c:forEach>
+            </div>
 
-  </c:if>
+            <div class="recipes">
+                <c:forEach var="preference" items="${preferences}">
+                    <section class="category-recipes">
+                        <h3 id="${preference}" class="category-title">${preference}</h3>
+                        <div class="recipe-list">
+                            <c:forEach var="recipe" items="${user.createdRecipes}" varStatus="status">
+                                <c:if test="${recipe.category == preference}">
+                                    <div class="recipe-item">
+                                        <h4>
+                                            <a href="${pageContext.request.contextPath}/recipe/${recipe.id}">${recipe.name}</a>
+                                        </h4>
+                                        <div class="recipe-cover-wrapper">
+                                            <c:if test="${not empty recipe.coverImagePath}">
+                                                <img src="${pageContext.request.contextPath}${recipe.coverImagePath}"
+                                                     alt="${recipe.name}" class="recipe-cover">
+                                            </c:if>
+                                        </div>
+                                        <p class="recipe-description">${recipe.description}</p>
+                                        <p class="recipe-time">Время приготовления: ${recipe.preparationTime} мин</p>
+                                        <div class="recipe-actions">
+                                            <a href="${pageContext.request.contextPath}/recipe/edit/${recipe.id}"
+                                               class="edit-btn">Редактировать</a>
+                                            <form id="deleteForm-${recipe.id}"
+                                                  action="${pageContext.request.contextPath}/cookbook" method="post"
+                                                  class="delete-form">
+                                                <input type="hidden" name="recipeId" value="${recipe.id}">
+                                            </form>
+                                            <a href="#"
+                                               onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();"
+                                               class="delete-btn">Удалить</a>
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </c:forEach>
+                        </div>
+                    </section>
+                </c:forEach>
+            </div>
+        </section>
+    </c:if>
 
-  <c:if test="${empty user.createdRecipes}">
-    <p>Ваша кулинарная книга пуста. Сохраните рецепты, чтобы они отображались здесь.</p>
-  </c:if>
-
-</div>
+    <c:if test="${empty user.createdRecipes}">
+        <p class="empty-message">Ваша кулинарная книга пуста. Сохраните рецепты, чтобы они отображались здесь.</p>
+    </c:if>
+</main>
 
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 
 </body>
 </html>
-

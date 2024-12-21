@@ -1,10 +1,9 @@
 package org.example.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.entity.User;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class UserService {
     public void auth(User user, HttpServletRequest req, HttpServletResponse resp) {

@@ -1,19 +1,18 @@
 package org.example.controllers;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.dao.*;
 import org.example.entity.User;
-import org.example.service.UserService;
+
 import org.example.util.DbException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,8 +74,7 @@ public class login extends HttpServlet {
             if (returnUrl != null && !returnUrl.isEmpty()) {
                 response.sendRedirect(returnUrl);
             } else {
-//                response.sendRedirect(getServletContext().getContextPath()+"/profile");
-                response.sendRedirect(request.getContextPath() + "/main");
+                response.sendRedirect(request.getContextPath() + "/profile");
             }
 
 

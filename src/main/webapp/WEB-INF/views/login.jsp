@@ -8,7 +8,10 @@
     <title>login</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/normalize.8.0.1.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/login.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
 <header>
@@ -44,9 +47,7 @@
 
 
     <a class="nav-link text-center mt-3" href="${pageContext.request.contextPath}/register">Регистрация</a>
-<%--    <a href="/forgotPassword">Забыли пароль?</a>--%>
 
-
-<%@ include file="/WEB-INF/views/footer.jsp" %>
+</main>
 </body>
 </html>
