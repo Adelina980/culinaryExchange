@@ -71,10 +71,10 @@ public class login extends HttpServlet {
             request.getSession().setAttribute("user", user);
 
             String returnUrl = request.getParameter("returnUrl");
-            if (returnUrl != null && !returnUrl.isEmpty()) {
+            if (returnUrl != null && !returnUrl.isEmpty() && !returnUrl.equals(request.getContextPath() + "/profile/")) {
                 response.sendRedirect(returnUrl);
             } else {
-                response.sendRedirect(request.getContextPath() + "/profile");
+                response.sendRedirect(request.getContextPath() + "/profile/" + user.getId());
             }
 
 

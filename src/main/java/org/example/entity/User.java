@@ -1,11 +1,15 @@
 package org.example.entity;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 public class User {
 
@@ -25,9 +29,8 @@ public class User {
     @Column(nullable = true)
     private String avatar;
 
-
-
-
+    @Column(nullable = false)
+    private Boolean isAdmin;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recipe> createdRecipes;
@@ -38,65 +41,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-
-
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdAt", nullable = false, updatable = false)
-    @org.hibernate.annotations.CreationTimestamp
     private String createdAt;
 
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getAvatar() {
-        return avatar;
-    }
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public List<Recipe> getCreatedRecipes() {
-        return createdRecipes;
-    }
-    public void setCreatedRecipes(List<Recipe> createdRecipes) {
-        this.createdRecipes = createdRecipes;
-    }
-    public String getCreatedAt(){
-        return createdAt;
-    }
-    public void setCreatedAt(String createdAt){
-        this.createdAt = createdAt;
-    }
-
-    public List<Recipe> getFavoriteRecipes() {
-        return favoriteRecipes;
-    }
-
-    public void setFavoriteRecipes(List<Recipe> favoriteRecipes) {
-        this.favoriteRecipes = favoriteRecipes;
-    }
 
 
 }

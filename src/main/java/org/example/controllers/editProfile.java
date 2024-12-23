@@ -143,7 +143,7 @@ public class editProfile extends HttpServlet {
                     userDao.addPreferenceToUser(user, preference);
                 }
             }
-            response.sendRedirect(request.getContextPath() + "/profile");
+            response.sendRedirect(request.getContextPath() + "/profile/" + userId);
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
         }

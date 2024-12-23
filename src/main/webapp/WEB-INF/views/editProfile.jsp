@@ -23,8 +23,15 @@
         <input type="hidden" name="userId" value="${user.id}"/>
 
         <div class="form-group">
-            <img src="${pageContext.request.contextPath}${user.avatar}"
-                 alt="Аватар пользователя" class="avatar">
+            <c:if test="${not empty user.avatar}">
+                <img src="${pageContext.request.contextPath}${user.avatar}" alt="Аватар пользователя"
+                     class="avatar">
+            </c:if>
+            <c:if test="${empty user.avatar}">
+                <img src="${pageContext.request.contextPath}/uploads/default-avatar.jpeg"
+                     alt="Аватар пользователя"
+                     class="avatar">
+            </c:if>
         </div>
 
         <div class="form-group">
@@ -71,7 +78,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-        <a href="${previousPage != null ? previousPage : pageContext.request.contextPath + '/profile/'}" class="btn btn-secondary">Отмена</a>
+        <a href="${previousPage != null ? previousPage : pageContext.request.contextPath + '/profile/' + user.id}" class="btn btn-secondary">Отмена</a>
 
     </form>
 </div>

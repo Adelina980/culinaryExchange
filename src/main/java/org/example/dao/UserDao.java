@@ -7,6 +7,8 @@ import org.example.util.DbException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao {
     private ConnectionProvider connectionProvider;
@@ -21,7 +23,7 @@ public class UserDao {
     }
 
     public User save(User user) {
-        String sql = "INSERT INTO \"User\" (username, email, password, \"createdAt\") VALUES (?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO \"User\" (username, email, password, \"createdAt\", \"isAdmin\") VALUES (?, ?, ?, ?, ?) RETURNING id";
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = today.format(formatter);
@@ -33,6 +35,7 @@ public class UserDao {
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
             preparedStatement.setString(4, formattedDate);
+            preparedStatement.setBoolean(5, false);
 
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -139,7 +142,9 @@ public class UserDao {
                     user.setUsername(resultSet.getString("username"));
                     user.setEmail(resultSet.getString("email"));
                     user.setPassword(resultSet.getString("password"));
+                    user.setAvatar(resultSet.getString("avatar"));
                     user.setCreatedAt(resultSet.getString("createdAt"));
+                    user.setIsAdmin(resultSet.getBoolean("isAdmin"));
 
                 }
             }
@@ -168,6 +173,8 @@ public class UserDao {
                 user.setPassword(resultSet.getString("password"));
                 user.setAvatar(resultSet.getString("avatar"));
                 user.setCreatedAt(resultSet.getString("createdAt"));
+                user.setIsAdmin(resultSet.getBoolean("isAdmin"));
+
 
 
             }
@@ -194,6 +201,100 @@ public class UserDao {
             e.printStackTrace();
         }
         return null;
+    }
+    public List<User> getUsers() {
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = connectionProvider.getConnection()) {
+            String query = "SELECT * FROM \"User\"";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                user.setAvatar(resultSet.getString("avatar"));
+                user.setCreatedAt(resultSet.getString("createdAt"));
+                user.setIsAdmin(resultSet.getBoolean("isAdmin"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public User revokeGrantRights(User user){
+        try (Connection connection = connectionProvider.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"User\" SET \"isAdmin\" = ? WHERE id = ?")) {
+
+            preparedStatement.setBoolean(1, !user.getIsAdmin());
+            preparedStatement.setLong(2, user.getId());
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<User> search(String query) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM \"User\" WHERE 1=1 ";
+
+        if (query != null && !query.isEmpty()) {
+            sql += "AND username LIKE ? ";
+        }
+
+        try (Connection connection = connectionProvider.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            int paramIndex = 1;
+            if (query != null && !query.isEmpty()) {
+                preparedStatement.setString(paramIndex++, "%" + query + "%");
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                user.setAvatar(resultSet.getString("avatar"));
+                user.setCreatedAt(resultSet.getString("createdAt"));
+                user.setIsAdmin(resultSet.getBoolean("isAdmin"));
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+        return users;
+    }
+
+    public void deleteUser(Long userId) throws DbException, SQLException {
+        String sql = "DELETE FROM \"User\" WHERE id = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = connectionProvider.getConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setLong(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DbException("Ошибка при удалении аккаунта", e);
+        } finally {
+            connection.close();
+            statement.close();
+        }
     }
 
 }

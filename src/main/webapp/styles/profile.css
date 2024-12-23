@@ -37,6 +37,10 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
+.delete-btn{
+    background-color: #ef142f;
+
+}
 
 .btn:hover, .edit-btn:hover, .delete-btn:hover, .remove-btn:hover {
     background-color: #357a38;

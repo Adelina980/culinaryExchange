@@ -36,7 +36,7 @@
         </div>
 
         <div class="form-group">
-            <label for="steps">Шаги приготовления (через запятую):</label>
+            <label for="steps">Шаги приготовления :</label>
             <textarea id="steps" name="steps" rows="6" required></textarea>
         </div>
 

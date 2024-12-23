@@ -147,6 +147,7 @@ public class RecipeDao {
 
             if (resultSet.next()) {
                 recipe = new Recipe();
+                recipe = new Recipe();
                 recipe.setId(resultSet.getLong("id"));
                 recipe.setName(resultSet.getString("name"));
                 recipe.setDescription(resultSet.getString("description"));
@@ -159,8 +160,8 @@ public class RecipeDao {
 //
 
                 Long userId = resultSet.getLong("user_id");
-                User user = new User();
-                user.setId(userId);
+                UserDao userDao = new UserDao(connectionProvider);
+                User user = userDao.findById(userId);
                 recipe.setUser(user);
                 recipe.setCreatedAt(resultSet.getString("createdAt"));
 

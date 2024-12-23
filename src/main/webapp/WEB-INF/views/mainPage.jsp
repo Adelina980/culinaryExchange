@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
 </head>
 <body>
-
+<c:if test="${notAdmin !=null}">
+    <p>${notAdmin}</p>
+</c:if>
 <c:if test="${not empty recipes}">
     <ul class="recipe-list">
         <c:forEach var="recipe" items="${recipes}">

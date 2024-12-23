@@ -9,7 +9,12 @@
             <li><h1 class="site-title">Culinary Exchange</h1></li>
         </div>
         <li><a href="${pageContext.request.contextPath}/">Главная</a></li>
-        <li><a href="${pageContext.request.contextPath}/profile">Профиль</a></li>
+        <c:if test="${user.isAdmin}">
+            <li><a href="${pageContext.request.contextPath}/admin">Страница администратора</a></li>
+        </c:if>
+        <c:if test="${not empty user}">
+            <li><a href="${pageContext.request.contextPath}/profile/${user.id}">Профиль</a></li>
+        </c:if>
         <li><a href="${pageContext.request.contextPath}/recipe/create">Создать рецепт</a></li>
         <li><a href="${pageContext.request.contextPath}/cookbook">Мои рецепты</a></li>
         <li><a href="${pageContext.request.contextPath}/favoriteRecipes">Любимые рецепты</a></li>
@@ -25,14 +30,14 @@
                     <a href="${pageContext.request.contextPath}/logout">Выйти</a>
                 </c:when>
                 <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/login">Войти</a> | <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
+                    <a href="${pageContext.request.contextPath}/login">Войти</a> | <a
+                        href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
                 </c:otherwise>
             </c:choose>
         </div>
     </ul>
 
 </nav>
-
 
 
 <div class="messages">

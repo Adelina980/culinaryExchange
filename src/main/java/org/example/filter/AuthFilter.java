@@ -18,7 +18,7 @@ import org.example.service.UserService;
 
 @WebFilter("/*")
 public class AuthFilter extends HttpFilter {
-    private static final String[] securedPaths = new String[]{"/recipe/create", "/cookbook", "/profile", "/favoriteRecipes"};
+    private static final String[] securedPaths = new String[]{"/recipe/create", "/cookbook", "/favoriteRecipes"};
     private UserService userService;
 
     @Override
@@ -31,7 +31,7 @@ public class AuthFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         boolean isProtected = false;
         for (String path : securedPaths) {
-            if (path.equals(req.getRequestURI().substring(req.getContextPath().length()))) {
+            if (req.getRequestURI().substring(req.getContextPath().length()).startsWith(path)) {
                 isProtected = true;
                 break;
             }

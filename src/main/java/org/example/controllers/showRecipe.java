@@ -46,6 +46,8 @@ public class showRecipe extends HttpServlet {
 
                 if (recipe != null) {
                     request.setAttribute("recipe", recipe);
+                    String ing = recipe.getIngredients();
+                    System.out.println("что по запятым " + ing);
 
 
                     List<Comment> comments = commentDao.findByRecipeId(recipeId);
@@ -64,6 +66,14 @@ public class showRecipe extends HttpServlet {
                     } else {
                         request.setAttribute("isAuthor", false);
                     }
+                    User author = recipe.getUser();
+                    String authorName = author.getUsername();
+                    Long authorId = author.getId();
+//                    request.setAttribute("author", author);
+                    request.setAttribute("authorName", authorName);
+                    request.setAttribute("authorId", authorId);
+                    System.out.println("id and name автора - " + authorName + authorId);
+
 
                     request.getRequestDispatcher("/WEB-INF/views/showRecipe.jsp").forward(request, response);
                 } else {

@@ -16,5 +16,6 @@ public class MainPageFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         res.sendRedirect(req.getContextPath() + "/main");
 
+
     }
 }
