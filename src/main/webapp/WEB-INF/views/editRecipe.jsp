@@ -29,7 +29,7 @@
 
         <div class="form-group">
             <label>Обложка рецепта:</label>
-            <img src="${pageContext.request.contextPath}${recipe.coverImagePath}" alt="Обложка рецепта"
+            <img src="${pageContext.request.contextPath}/image?file=${recipe.coverImagePath}" alt="Обложка рецепта"
                  class="recipe-cover-image">
         </div>
 
@@ -80,9 +80,10 @@
         <div class="form-group">
             <label>Другие изображения:</label>
             <c:forEach var="image" items="${images}">
-                <img src="${pageContext.request.contextPath}${image.filePath}" alt="Изображение рецепта"
+                <img src="${pageContext.request.contextPath}/image?file=${image.filePath}" alt="Изображение рецепта"
                      class="recipe-image">
             </c:forEach>
+
         </div>
         <label for="cover">Выбрать новую обложку рецепта:</label>
         <input type="file" id="cover" name="cover" multiple accept="image/*">

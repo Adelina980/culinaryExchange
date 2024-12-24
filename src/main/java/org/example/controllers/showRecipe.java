@@ -9,6 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class showRecipe extends HttpServlet {
     private RatingDao ratingDao;
     private UserService userService;
     private ImageRecipeDao imageRecipeDao;
+    private String path;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -30,6 +33,7 @@ public class showRecipe extends HttpServlet {
         ratingDao = (RatingDao) getServletContext().getAttribute("ratingDao");
         imageRecipeDao = (ImageRecipeDao) getServletContext().getAttribute("imageRecipeDao");
         userService = (UserService) getServletContext().getAttribute("userService");
+        path = (String) getServletContext().getAttribute("path");
 
 
     }
@@ -72,7 +76,8 @@ public class showRecipe extends HttpServlet {
 //                    request.setAttribute("author", author);
                     request.setAttribute("authorName", authorName);
                     request.setAttribute("authorId", authorId);
-                    System.out.println("id and name автора - " + authorName + authorId);
+
+
 
 
                     request.getRequestDispatcher("/WEB-INF/views/showRecipe.jsp").forward(request, response);
@@ -92,6 +97,7 @@ public class showRecipe extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+
 
 
         User currentUser = userService.getUser(request, response);

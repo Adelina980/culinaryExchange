@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.example.dao.*;
 import org.example.entity.User;
+import org.example.service.FileService;
 import org.example.util.DbException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -22,11 +23,15 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class register extends HttpServlet {
     private UserDao userDao;
     private PreferenceDao preferenceDao;
+    private String path;
+    FileService fileService;
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         userDao = (UserDao) getServletContext().getAttribute("userDao");
         preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
+        path = (String) getServletContext().getAttribute("path");
+        fileService = (FileService) getServletContext().getAttribute("fileService");
     }
 
 

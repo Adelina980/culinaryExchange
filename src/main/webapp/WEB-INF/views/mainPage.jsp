@@ -24,9 +24,10 @@
             <li class="recipe-item">
                 <a href="${pageContext.request.contextPath}/recipe/${recipe.id}">
                     <c:if test="${not empty recipe.coverImagePath}">
-                        <img src="${pageContext.request.contextPath}${recipe.coverImagePath}" alt="${recipe.name}"
+                        <img src="${pageContext.request.contextPath}/image?file=${recipe.coverImagePath}" alt="${recipe.name}"
                              class="recipe-cover">
                     </c:if>
+
                     <h3>${recipe.name}</h3>
                     <p>${recipe.description}</p>
                 </a>

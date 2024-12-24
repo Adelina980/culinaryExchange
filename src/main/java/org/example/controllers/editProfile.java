@@ -13,6 +13,7 @@ import org.example.entity.Preference;
 import org.example.entity.Recipe;
 import org.example.entity.User;
 import org.example.entity.UserPreference;
+import org.example.service.FileService;
 import org.example.service.UserService;
 import org.example.util.DbException;
 
@@ -35,6 +36,8 @@ public class editProfile extends HttpServlet {
     private PreferenceDao preferenceDao;
     private UserService userService;
     private UserPreferenceDao userPreferenceDao;
+    private String path;
+    FileService fileService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -44,6 +47,8 @@ public class editProfile extends HttpServlet {
         preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
         userPreferenceDao = (UserPreferenceDao) getServletContext().getAttribute("userPreferenceDao");
         userService = (UserService) getServletContext().getAttribute("userService");
+        path = (String) getServletContext().getAttribute("path");
+        fileService = (FileService) getServletContext().getAttribute("fileService");
 
     }
 
@@ -108,21 +113,21 @@ public class editProfile extends HttpServlet {
             Part filePart = request.getPart("avatar");
 
             if (filePart != null && filePart.getSize() > 0) {
-//                String uploadPath = getServletContext().getRealPath("")  + "uploads";
-                String uploadPath = request.getServletContext().getRealPath("/uploads") ;
+//                String uploadPath = getServletContext().getRealPath("")  +
 
 
-                File uploadDir = new File(uploadPath);
+
+                File uploadDir = new File(path);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
 
                 String fileName = userId + "_" + FilenameUtils.getName(filePart.getSubmittedFileName());
-                String filePath = uploadPath + File.separator + fileName;
+                String filePath = path + File.separator + fileName;
                 filePart.write(filePath);
 
-                user.setAvatar("/uploads/" + fileName);
-                System.out.println("/uploads/" + fileName);
+                user.setAvatar(fileName);
+
 //                user.setAvatar(filePath);
             }
 

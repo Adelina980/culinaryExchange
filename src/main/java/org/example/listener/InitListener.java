@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import org.example.dao.*;
+import org.example.service.FileService;
 import org.example.service.UserService;
 
 
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.example.dao.ConnectionProvider;
+import org.example.util.PropertyReader;
 
 @WebListener
 public class InitListener implements ServletContextListener {
@@ -25,11 +27,15 @@ public class InitListener implements ServletContextListener {
             sce.getServletContext().setAttribute("preferenceDao", new PreferenceDao(connectionProvider));
             sce.getServletContext().setAttribute("ratingDao", new RatingDao(connectionProvider));
             sce.getServletContext().setAttribute("recipeDao", new RecipeDao(connectionProvider));
-            sce.getServletContext().setAttribute("userDao", new UserDao(connectionProvider));
+            UserDao userDao = new UserDao(connectionProvider);
+            sce.getServletContext().setAttribute("userDao", userDao);
             sce.getServletContext().setAttribute("userFavoriteRecipesDao", new UserFavoriteRecipesDao(connectionProvider));
             sce.getServletContext().setAttribute("userPreferenceDao", new UserPreferenceDao(connectionProvider));
             sce.getServletContext().setAttribute("imageRecipeDao", new ImageRecipeDao(connectionProvider));
             sce.getServletContext().setAttribute("userService", new UserService());
+            String path = PropertyReader.getProperty("path");
+            sce.getServletContext().setAttribute("path", path);
+            sce.getServletContext().setAttribute("fileService", new FileService(userDao, path));
 
             Map<UUID, Long> userSessions = new HashMap<>();
 

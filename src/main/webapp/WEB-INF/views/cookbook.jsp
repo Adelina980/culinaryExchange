@@ -43,8 +43,8 @@
                                         </h4>
                                         <div class="recipe-cover-wrapper">
                                             <c:if test="${not empty recipe.coverImagePath}">
-                                                <img src="${pageContext.request.contextPath}${recipe.coverImagePath}"
-                                                     alt="${recipe.name}" class="recipe-cover">
+                                                <img src="${pageContext.request.contextPath}/image?file=${recipe.coverImagePath}" alt="${recipe.name}"
+                                                     class="recipe-cover">
                                             </c:if>
                                         </div>
                                         <p class="recipe-description">${recipe.description}</p>

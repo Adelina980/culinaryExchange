@@ -12,6 +12,7 @@ import org.example.dao.*;
 import org.example.entity.ImageRecipe;
 import org.example.entity.Recipe;
 import org.example.entity.User;
+import org.example.service.FileService;
 import org.example.service.UserService;
 
 
@@ -35,18 +36,26 @@ public class createRecipe extends HttpServlet {
     private RecipeDao recipeDao;
     private PreferenceDao preferenceDao;
     private UserService userService;
+    private String path;
+    FileService fileService;
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         recipeDao = (RecipeDao) getServletContext().getAttribute("recipeDao");
         preferenceDao = (PreferenceDao) getServletContext().getAttribute("preferenceDao");
         userService = (UserService) getServletContext().getAttribute("userService");
+        path = (String) getServletContext().getAttribute("path");
+        fileService = (FileService) getServletContext().getAttribute("fileService");
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<String> preferences = preferenceDao.getPreferences();
         request.setAttribute("preferences", preferences);
+
+
         getServletContext().getRequestDispatcher("/WEB-INF/views/createRecipe.jsp").forward(request, response);
 
     }
@@ -80,8 +89,8 @@ public class createRecipe extends HttpServlet {
             recipe.setIngredients(ingredients);
             recipe.setSteps(steps);
 
-            String uploadPath = request.getServletContext().getRealPath("/uploads") ;
-            File uploadDir = new File(uploadPath);
+
+            File uploadDir = new File(path);
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
@@ -91,11 +100,10 @@ public class createRecipe extends HttpServlet {
             for (Part part : request.getParts()) {
                 if (part.getName().equals("cover") && part.getSize() > 0) {
                     String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-                    String filePath = uploadPath + File.separator + fileName;
+                    String filePath = path + File.separator + fileName;
                     part.write(filePath);
                     coverImage = new ImageRecipe();
-                    recipe.setCoverImagePath("/uploads/" + fileName);
-                    System.out.println(uploadPath + File.separator + fileName);
+                    recipe.setCoverImagePath(fileName);
                 }
             }
 
@@ -104,19 +112,18 @@ public class createRecipe extends HttpServlet {
                 if (part.getName().equals("images") && part.getSize() > 0) {
                     String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
-                    String filePath = uploadPath + File.separator + fileName;
+                    String filePath = path + File.separator + fileName;
                     part.write(filePath);
 
                     ImageRecipe image = new ImageRecipe();
-                    image.setFilePath("/uploads/" + fileName);
-                    System.out.println(uploadPath + fileName);
+                    image.setFilePath(fileName);
                     recipe.addImage(image);
                     images.add(image);
+
 
                 }
             }
             recipeDao.saveRecipe(recipe, user, coverImage, images);
-
 
             response.sendRedirect(getServletContext().getContextPath()+"/cookbook");
         } catch (Exception e) {

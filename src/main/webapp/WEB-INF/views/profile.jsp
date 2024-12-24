@@ -22,12 +22,14 @@
     <p class="user-info">
     <div class="avatar-container">
         <c:if test="${not empty profileUser.avatar}">
-            <img src="${pageContext.request.contextPath}${profileUser.avatar}" alt="Аватар пользователя"
+            <img src="${pageContext.request.contextPath}/image?file=${profileUser.avatar}" alt="Аватар пользователя"
                  class="avatar">
         </c:if>
         <c:if test="${empty profileUser.avatar}">
-            <img src="${pageContext.request.contextPath}/uploads/default-avatar.jpeg"
-                 alt="Аватар пользователя"
+            <form action="${pageContext.request.contextPath}/image" method="get">
+                <input type="hidden" name="fileName" value="default-avatar.jpeg">
+            </form>
+            <img src="${pageContext.request.contextPath}/image?file=${profileUser.avatar}" alt="Аватар пользователя"
                  class="avatar">
         </c:if>
     </div>
@@ -46,10 +48,10 @@
     <p>Рейтинг: ${userRating}</p>
     <p>Профиль был создан: ${createdAt}</p>
 
-    <c:if test="${currentUser.id == profileUser.id}">
+    <c:if test="${user.id == profileUser.id}">
         <a href="${pageContext.request.contextPath}/profile/edit" class="btn">Редактировать профиль</a>
     </c:if>
-    <c:if test="${currentUser.id == profileUser.id}">
+    <c:if test="${user.id == profileUser.id}">
         <form action="${pageContext.request.contextPath}/profile/${recipe.id}"  method="post">
             <input type="hidden" name="action" value="delete">
             <button type="submit" class="delete-btn">Удалить профиль</button>
@@ -60,7 +62,7 @@
 <div class="user-recipes">
     <h3>Мои рецепты</h3>
     <p>Создано ${createdRecipes.size()} рецептов.</p>
-    <c:if test="${currentUser.id == profileUser.id}">
+    <c:if test="${user.id == profileUser.id}">
         <a href="${pageContext.request.contextPath}/cookbook" class="btn">Посмотреть мои рецепты</a>
     </c:if>
 </div>
@@ -68,7 +70,7 @@
 <div class="saved-recipes">
     <h3>Избранные рецепты</h3>
     <p>Добавлено ${favoriteRecipes.size()} рецептов в избранное.</p>
-    <c:if test="${currentUser.id == profileUser.id}">
+    <c:if test="${user.id == profileUser.id}">
         <a href="${pageContext.request.contextPath}/favoriteRecipes" class="btn">Перейти к избранным</a>
     </c:if>
 </div>

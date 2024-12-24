@@ -45,7 +45,7 @@
         <h1>Выдать права администратора пользователю/ Лишить прав администратора пользователя</h1>
 
 
-        <h1>Поиск рецептов</h1>
+        <h1>Поиск пользователей</h1>
         <form action="${pageContext.request.contextPath}/admin" method="get">
             <input type="text" name="query" placeholder="Введите ключевые слова..."
                    value="${param.query != null ? param.query : ''}">
@@ -61,12 +61,14 @@
                         <a href="${pageContext.request.contextPath}/profile/${user.id}">
 
                             <c:if test="${not empty user.avatar}">
-                                <img src="${pageContext.request.contextPath}${user.avatar}" alt="Аватар пользователя"
+                                <form action="${pageContext.request.contextPath}/image" method="get">
+                                    <input type="hidden" name="fileName" value="${user.avatar}">
+                                </form>
+                                <img src="${pageContext.request.contextPath}/image?file=${user.avatar}" alt="Аватар пользователя"
                                      class="avatar">
                             </c:if>
                             <c:if test="${empty user.avatar}">
-                                <img src="${pageContext.request.contextPath}/uploads/default-avatar.jpeg"
-                                     alt="Аватар пользователя"
+                                <img src="${pageContext.request.contextPath}/image?file=${user.avatar}" alt="Аватар пользователя"
                                      class="avatar">
                             </c:if>
                             <h3>${user.username}</h3>

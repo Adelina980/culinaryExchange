@@ -29,7 +29,7 @@
 
 
     <c:if test="${not empty recipe.coverImagePath}">
-        <img src="${pageContext.request.contextPath}${recipe.coverImagePath}" alt="Обложка рецепта"
+        <img src="${pageContext.request.contextPath}/image?file=${recipe.coverImagePath}" alt="Обложка рецепта"
              class="recipe-cover-image">
     </c:if>
 
@@ -70,10 +70,11 @@
                 <div class="carousel-inner">
                     <c:forEach var="image" items="${images}" varStatus="status">
                         <div class="carousel-item ${status.first ? 'active' : ''}">
-                            <img src="${pageContext.request.contextPath}${image.filePath}" class="d-block w-100"
-                                 alt="Изображение рецепта">
+                            <img src="${pageContext.request.contextPath}/image?file=${image.filePath}" alt="Изображение рецепта"
+                                 class="d-block w-100">
                         </div>
                     </c:forEach>
+
                 </div>
 
                 <!-- Кнопки управления -->

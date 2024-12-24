@@ -19,20 +19,20 @@
 <div class="edit-recipe-container">
     <h1>Редактировать профиль</h1>
 
-    <form action="${pageContext.request.contextPath}/profile/edit" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="userId" value="${user.id}"/>
+    <input type="hidden" name="userId" value="${user.id}"/>
+    <div class="form-group">
+        <c:if test="${not empty user.avatar}">
+            <img src="${pageContext.request.contextPath}/image?file=${user.avatar}" alt="Аватар пользователя"
+                 class="avatar">
+        </c:if>
 
-        <div class="form-group">
-            <c:if test="${not empty user.avatar}">
-                <img src="${pageContext.request.contextPath}${user.avatar}" alt="Аватар пользователя"
-                     class="avatar">
-            </c:if>
-            <c:if test="${empty user.avatar}">
-                <img src="${pageContext.request.contextPath}/uploads/default-avatar.jpeg"
-                     alt="Аватар пользователя"
-                     class="avatar">
-            </c:if>
-        </div>
+        <c:if test="${empty user.avatar}">
+            <img src="${pageContext.request.contextPath}/image?file=${user.avatar}" alt="Аватар пользователя"
+                 class="avatar">
+        </c:if>
+    </div>
+
+    <form action="${pageContext.request.contextPath}/profile/edit" method="post" enctype="multipart/form-data">
 
         <div class="form-group">
             <label for="avatar">Изменить аватар:</label>
@@ -54,7 +54,7 @@
             <div>
                 <c:forEach var="preference" items="${preferences}">
                     <div>
-                        <c:set var="isChecked" value="${fn:contains(category, preference)}" />
+                        <c:set var="isChecked" value="${fn:contains(category, preference)}"/>
                         <input type="checkbox" id="preference-${preference}" name="preferences" value="${preference}"
                                <c:if test="${isChecked}">checked</c:if>/>
                         <label for="preference-${preference}">${preference}</label>
@@ -62,7 +62,6 @@
                 </c:forEach>
             </div>
         </div>
-
 
 
         <div class="form-group">
@@ -78,7 +77,8 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-        <a href="${previousPage != null ? previousPage : pageContext.request.contextPath + '/profile/' + user.id}" class="btn btn-secondary">Отмена</a>
+        <a href="${previousPage != null ? previousPage : pageContext.request.contextPath + '/profile/' + user.id}"
+           class="btn btn-secondary">Отмена</a>
 
     </form>
 </div>

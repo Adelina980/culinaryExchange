@@ -19,12 +19,12 @@
 <div class="recipe-form-container">
     <h1>Создать новый рецепт</h1>
 
-    <form class="create-recipe-form" action="${pageContext.request.contextPath}/recipe/create" method="post" enctype="multipart/form-data">
+    <form class="create-recipe-form" action="${pageContext.request.contextPath}/recipe/create" method="post"
+          enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">Название рецепта:</label>
             <input type="text" id="title" name="title" required>
         </div>
-
         <div class="form-group">
             <label for="description">Описание:</label>
             <textarea id="description" name="description" rows="4" required></textarea>
@@ -71,8 +71,7 @@
         <input type="file" id="images" name="images" multiple accept="image/*">
 
 
-
-        <button class="publish-btn"type="submit">Опубликовать</button>
+        <button class="publish-btn" type="submit">Опубликовать</button>
     </form>
 
     <c:if test="${not empty errorMessage}">
