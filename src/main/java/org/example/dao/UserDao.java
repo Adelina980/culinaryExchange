@@ -23,7 +23,7 @@ public class UserDao {
     }
 
     public User save(User user) {
-        String sql = "INSERT INTO \"User\" (username, email, password, \"createdAt\", \"isAdmin\") VALUES (?, ?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO \"User\" (username, email, password, avatar, \"createdAt\", \"isAdmin\") VALUES (?, ?, ?, ?, ?,?) RETURNING id";
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         String formattedDate = today.format(formatter);
@@ -34,8 +34,9 @@ public class UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setString(4, formattedDate);
-            preparedStatement.setBoolean(5, false);
+            preparedStatement.setString(4, "default-avatar.jpeg");
+            preparedStatement.setString(5, formattedDate);
+            preparedStatement.setBoolean(6, false);
 
 
             ResultSet resultSet = preparedStatement.executeQuery();

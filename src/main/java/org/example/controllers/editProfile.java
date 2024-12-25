@@ -20,6 +20,7 @@ import org.example.util.DbException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -111,11 +112,13 @@ public class editProfile extends HttpServlet {
             }
             // Обновление аватара
             Part filePart = request.getPart("avatar");
+            String oldAvatar = user.getAvatar();
 
             if (filePart != null && filePart.getSize() > 0) {
 //                String uploadPath = getServletContext().getRealPath("")  +
-
-
+                if (!Objects.equals(oldAvatar, "default-avatar.jpeg")) {
+                    fileService.deleteFile(oldAvatar);
+                }
 
                 File uploadDir = new File(path);
                 if (!uploadDir.exists()) {
@@ -128,7 +131,11 @@ public class editProfile extends HttpServlet {
 
                 user.setAvatar(fileName);
 
-//                user.setAvatar(filePath);
+            }else {
+                if (!Objects.equals(oldAvatar, "default-avatar.jpeg")) {
+                    fileService.deleteFile(oldAvatar);
+                }
+                user.setAvatar("default-avatar.jpeg");
             }
 
 
@@ -150,7 +157,8 @@ public class editProfile extends HttpServlet {
             }
             response.sendRedirect(request.getContextPath() + "/profile/" + userId);
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
+            e.printStackTrace();
         }
 
 

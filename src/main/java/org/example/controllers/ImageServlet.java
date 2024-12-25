@@ -39,25 +39,10 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String file = request.getParameter("file");
-        fileService.downloadFile(file, response);
 
+        fileService.downloadFile(file, response);
 
     }
 
-
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        UserDataResponse user = (UserDataResponse) req.getSession().getAttribute("user");
-//
-//        UUID fileId = null;
-//        try {
-//            fileId = fileService.updateFile(req.getPart("file"), user.getId() );
-//        } catch (IncorrectFileTypeException e) {
-//            resp.sendRedirect("/error?err=Invalid file format");
-//        }
-//
-//        userService.setUsersAvatarId(user.getId(), fileId);
-//        resp.sendRedirect("/main");
-//    }
 }
 

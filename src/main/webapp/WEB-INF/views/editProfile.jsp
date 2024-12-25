@@ -19,7 +19,6 @@
 <div class="edit-recipe-container">
     <h1>Редактировать профиль</h1>
 
-    <input type="hidden" name="userId" value="${user.id}"/>
     <div class="form-group">
         <c:if test="${not empty user.avatar}">
             <img src="${pageContext.request.contextPath}/image?file=${user.avatar}" alt="Аватар пользователя"
@@ -33,6 +32,7 @@
     </div>
 
     <form action="${pageContext.request.contextPath}/profile/edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="userId" value="${user.id}"/>
 
         <div class="form-group">
             <label for="avatar">Изменить аватар:</label>

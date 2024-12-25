@@ -21,17 +21,9 @@
 
     <p class="user-info">
     <div class="avatar-container">
-        <c:if test="${not empty profileUser.avatar}">
-            <img src="${pageContext.request.contextPath}/image?file=${profileUser.avatar}" alt="Аватар пользователя"
-                 class="avatar">
-        </c:if>
-        <c:if test="${empty profileUser.avatar}">
-            <form action="${pageContext.request.contextPath}/image" method="get">
-                <input type="hidden" name="fileName" value="default-avatar.jpeg">
-            </form>
-            <img src="${pageContext.request.contextPath}/image?file=${profileUser.avatar}" alt="Аватар пользователя"
-                 class="avatar">
-        </c:if>
+        <img src="${pageContext.request.contextPath}/image?file=${profileUser.avatar}" alt="Аватар пользователя"
+             class="avatar">
+
     </div>
 
     <h2>${profileUser.username}</h2>
@@ -52,7 +44,7 @@
         <a href="${pageContext.request.contextPath}/profile/edit" class="btn">Редактировать профиль</a>
     </c:if>
     <c:if test="${user.id == profileUser.id}">
-        <form action="${pageContext.request.contextPath}/profile/${recipe.id}"  method="post">
+        <form action="${pageContext.request.contextPath}/profile/${recipe.id}" method="post">
             <input type="hidden" name="action" value="delete">
             <button type="submit" class="delete-btn">Удалить профиль</button>
         </form>

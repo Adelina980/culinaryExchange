@@ -130,11 +130,12 @@ public class editRecipe extends HttpServlet {
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
-
+                String oldCoverImage = recipe.getCoverImagePath();
                 ImageRecipe coverImage = null;
                 // Сохраняем обложку
                 for (Part part : request.getParts()) {
                     if (part.getName().equals("cover") && part.getSize() > 0) {
+                        fileService.deleteFile(oldCoverImage);
                         String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
                         String filePath = path + File.separator + fileName;
                         part.write(filePath);
@@ -146,20 +147,28 @@ public class editRecipe extends HttpServlet {
 
 
                 List<ImageRecipe> images = imageRecipeDao.findByRecipeId(recipeId);
-                for (Part part : request.getParts()) {
-                    if (part.getName().equals("images") && part.getSize() > 0) {
-                        String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                if (request.getParts() != null){
+                    for (ImageRecipe image : images) {
+                        fileService.deleteFile(image.getFilePath());
+                    }
+                    images = null;
 
-                        String filePath = path + File.separator + fileName;
-                        part.write(filePath);
+                    for (Part part : request.getParts()) {
+                        if (part.getName().equals("images") && part.getSize() > 0) {
+                            String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
-                        ImageRecipe image = new ImageRecipe();
-                        image.setFilePath(fileName);
+                            String filePath = path + File.separator + fileName;
+                            part.write(filePath);
 
-                        recipe.addImage(image);
-                        images.add(image);
+                            ImageRecipe image = new ImageRecipe();
+                            image.setFilePath(fileName);
+
+                            recipe.addImage(image);
+                            images.add(image);
+                        }
                     }
                 }
+
 
 
                 recipeDao.updateRecipe(recipe, images);
