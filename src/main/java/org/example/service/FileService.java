@@ -39,7 +39,7 @@ public class FileService {
             try {
                 fis.close();
                 os.close();
-            } catch (IOException ignore) {} //ignore errors in closing streams
+            } catch (IOException ignore) {}
         }
 
     }

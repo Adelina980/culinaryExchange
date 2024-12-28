@@ -157,8 +157,8 @@ public class editProfile extends HttpServlet {
             }
             response.sendRedirect(request.getContextPath() + "/profile/" + userId);
         } catch (Exception e) {
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
-            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обработке данных.");
+
         }
 
 

@@ -1,30 +1,15 @@
 package org.example.entity;
 
 
-import javax.persistence.*;
+
 import java.util.Date;
 
-@Entity
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(columnDefinition = "TEXT")
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    @org.hibernate.annotations.CreationTimestamp
     private String createdAt;
 
     public String getContent() {

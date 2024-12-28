@@ -232,7 +232,6 @@ public class RecipeDao {
             }
             connection.commit();
         } catch (SQLException e) {
-
             e.printStackTrace();
             throw new DbException("Ошибка при обновлении рецепта", e);
         }

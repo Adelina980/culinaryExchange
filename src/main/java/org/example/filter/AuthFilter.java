@@ -43,7 +43,6 @@ public class AuthFilter extends HttpFilter {
                 returnUrl += "?" + queryString;
             }
             res.sendRedirect(req.getContextPath() + "/login?returnUrl=" + URLEncoder.encode(returnUrl, "UTF-8"));
-            return;
         } else {
             if (userService.isNonAnonymous(req, res)) {
                 req.setAttribute("user", userService.getUser(req, res));

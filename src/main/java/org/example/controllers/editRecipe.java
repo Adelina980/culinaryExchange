@@ -177,8 +177,7 @@ public class editRecipe extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Вы не можете редактировать этот рецепт.");
             }
         } catch (DbException e) {
-            e.printStackTrace();
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обновлении рецепта.");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Ошибка при обновлении рецепта.");
         }
     }
 }

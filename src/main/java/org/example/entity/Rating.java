@@ -1,23 +1,13 @@
 package org.example.entity;
 
-import javax.persistence.*;
 
-@Entity
+
+
 public class Rating {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private Double rating;
-
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
 

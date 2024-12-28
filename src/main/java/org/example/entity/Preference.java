@@ -1,14 +1,9 @@
 package org.example.entity;
 
-import javax.persistence.*;
 
-@Entity
+
 public class Preference {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
     private String preferenceName;
 
     public Long getId(){

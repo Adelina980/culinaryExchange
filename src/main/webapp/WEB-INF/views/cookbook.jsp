@@ -56,10 +56,11 @@
                                                   action="${pageContext.request.contextPath}/cookbook" method="post"
                                                   class="delete-form">
                                                 <input type="hidden" name="recipeId" value="${recipe.id}">
+                                                <button class="delete-btn" type="submit"
+                                                        onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?');">Удалить
+                                                </button>
                                             </form>
-                                            <a href="#"
-                                               onclick="event.preventDefault(); document.getElementById('deleteForm-${recipe.id}').submit();"
-                                               class="delete-btn">Удалить</a>
+
                                         </div>
                                     </div>
                                 </c:if>

@@ -1,19 +1,10 @@
 package org.example.entity;
 
-import javax.persistence.*;
 
-@Entity
+
 public class UserFavoriteRecipes {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     public void setId(Long id) {
